@@ -1,11 +1,25 @@
+import java.util.Scanner;
+
 public class Morpheus {
     public static void main(String[] args) {
-        String logo = "____________________________________________________________\n" +
-                " Hello! I'm Morpheus\n" +
-                " What can I do for you?\n" +
-                "____________________________________________________________\n" +
-                " Bye. Hope to see you again soon!\n" +
+        Scanner sc = new Scanner(System.in);
+        String input;
+        String init = "____________________________________________________________\n" +
+                " Hey there! My name is Morpheus\n" +
+                " Yeah, like the one from the Matrix\n" +
+                " What can I do for you today?\n" +
                 "____________________________________________________________\n";
-        System.out.println(logo);
+        System.out.println(init);
+        input = sc.nextLine();
+        while (!input.isBlank() && !input.equalsIgnoreCase("bye")) {
+            String output = "____________________________________________________________\n" +
+                    input + "\n" +
+                    "____________________________________________________________\n";
+            System.out.println(output);
+            input = sc.nextLine();
+        }
+
+        System.out.println("Bye! Just hit run to boot me up again. See you soon!");
+        sc.close();
     }
 }
