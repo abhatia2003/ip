@@ -3,6 +3,11 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Morpheus {
+    public static final String HORIZONTAL_LINE = "------------------------------------------------------------\n";
+    public static final String TODO = "todo";
+    public static final String DEADLINE = "deadline";
+    public static final String EVENT = "event";
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         String input;
@@ -10,7 +15,11 @@ public class Morpheus {
         welcomeMessage();
         while (true) {
             input = sc.nextLine();
-            if (input.isEmpty() || input.equalsIgnoreCase("bye")) {
+            if (input.isEmpty()) {
+                System.out.println("Looks like that line was empty. Try adding a task with 'todo', 'deadline', or 'event'. I’m ready when you are!");
+                continue; // or print a gentle prompt
+            }
+            if (input.equalsIgnoreCase("bye")) {
                 byeMessage();
                 break;
             } else if (input.equalsIgnoreCase("list")) {
@@ -49,31 +58,36 @@ public class Morpheus {
                 "                  | |                         \n" +
                 "                  |_|                         \n";
         String banner = welcome + "\n" + to + "\n" + morpheus;
-        String init = "------------------------------------------------------------\n" +
-                " Hey there! My name is Morpheus\n" +
-                " Like the guy from the Matrix\n" +
-                " What can I do for you today?\n" +
-                "------------------------------------------------------------\n";
+        String init = HORIZONTAL_LINE +
+                " Hey there! I'm Morpheus, like the one from The Matrix.\n" +
+                " How can I help you today?\n" +
+                HORIZONTAL_LINE;
         System.out.println(banner);
         System.out.println(init);
     }
 
     private static void byeMessage() {
-        String output = "------------------------------------------------------------\n" +
-                "Bye! Just hit run to boot me up again. See you soon!\n" +
-                "------------------------------------------------------------\n";
-        System.out.println(output);
+        System.out.println(
+                HORIZONTAL_LINE +
+                        "Thanks for spending time with me today. Press Run anytime to start me again. See you soon!\n" +
+                        HORIZONTAL_LINE
+        );
     }
 
     private static void listMessage(List<Task> tasklist) {
-        String upper = "------------------------------------------------------------\n" +
-                "Here is a summary of your tasks: ";
-        System.out.println(upper);
+        if (tasklist.size() == 0) {
+            System.out.println(
+                    "Your list is empty for now. Add one with 'todo', 'deadline', or 'event', and I’ll keep track for you."
+            );
+            return;
+        }
+        String upperMessage = HORIZONTAL_LINE + "Here’s a quick summary of your tasks:";
+        System.out.println(upperMessage);
         for (int i = 0; i < tasklist.size(); i++) {
             String item = String.format("%d. %s", i + 1, tasklist.get(i).toString());
             System.out.println(item);
         }
-        System.out.println("------------------------------------------------------------");
+        System.out.println(HORIZONTAL_LINE);
     }
 
     private static void markMessage(String input, List<Task> tasklist) {
@@ -81,15 +95,15 @@ public class Morpheus {
             int id = Integer.valueOf(input.substring(4).trim()) - 1;
             Task task = tasklist.get(id);
             task.mark();
-            String output = "--------------------------------------------------------------\n" +
-                    "Nicely Done! I've marked this task as completed: \n" +
+            String output = HORIZONTAL_LINE +
+                    "Nice! I’ve marked this as completed:\n" +
                     task.toString() + "\n" +
-                    "--------------------------------------------------------------\n";
+                    HORIZONTAL_LINE;
             System.out.println(output);
         } catch (IndexOutOfBoundsException e) {
-            System.out.println("This list item does not exist, please try again with an index that is present.");
+            System.out.println("I couldn’t find that task number just yet. Try 'list' to see what’s available, then pick a number from there.");
         } catch (NumberFormatException e) {
-            System.out.println("Invalid number after 'mark', please try again.");
+            System.out.println("It seems I couldn’t spot a task number after 'mark'. You can try something like: mark 2");
         }
     }
 
@@ -98,15 +112,15 @@ public class Morpheus {
             int id = Integer.valueOf(input.substring(6).trim()) - 1;
             Task task = tasklist.get(id);
             task.unmark();
-            String output = "--------------------------------------------------------------\n" +
-                    "Okay, I've unmarked this task and it is now incomplete: \n" +
+            String output = HORIZONTAL_LINE +
+                    "All set. I’ve marked this task as not done:\n" +
                     task.toString() + "\n" +
-                    "--------------------------------------------------------------\n";
+                    HORIZONTAL_LINE;
             System.out.println(output);
         } catch (IndexOutOfBoundsException e) {
-            System.out.println("This list item does not exist, please try again with an index that is present.");
+            System.out.println("I couldn’t find that task number just yet. Try 'list' to see what’s available, then pick a number from there.");
         } catch (NumberFormatException e) {
-            System.out.println("Invalid number after 'unmark', please try again.");
+            System.out.println("It seems I couldn’t spot a task number after 'unmark'. You can try something like: unmark 2");
         }
     }
 
@@ -114,27 +128,30 @@ public class Morpheus {
         if (!input.isEmpty()) {
             try {
                 input = input.trim();
-                if (input.toLowerCase().startsWith("todo")) {
-                    tasklist.add(new ToDo(input.substring(4).trim()));
-
-                } else if (input.toLowerCase().startsWith("deadline")) {
-                    input = input.substring(9).trim();
+                if (input.toLowerCase().startsWith(TODO)) {
+                    String task = input.substring(TODO.length()).trim();
+                    if (task.length() < 2) {
+                        throw new IllegalArgumentException("your todo description looks a bit short. Try: todo <description>");
+                    }
+                    tasklist.add(new ToDo(task));
+                } else if (input.toLowerCase().startsWith(DEADLINE)) {
+                    input = input.substring(DEADLINE.length()).trim();
                     String[] parts = input.split("(?i)/by");
 
                     if (parts.length < 2) {
-                        throw new IllegalArgumentException("Invalid deadline format! Use: deadline <task> /by <time>");
+                        throw new IllegalArgumentException("I can only add a deadline once I have a due time. Try: deadline <task> /by <time>");
                     }
 
                     String content = parts[0].trim();
                     String endTime = parts[1].trim();
                     tasklist.add(new Deadline(content, endTime));
 
-                } else if (input.toLowerCase().startsWith("event")) {
-                    input = input.substring(6).trim();
+                } else if (input.toLowerCase().startsWith(EVENT)) {
+                    input = input.substring(EVENT.length()).trim();
                     String[] parts = input.split("(?i)/from|/to");
 
                     if (parts.length < 3) {
-                        throw new IllegalArgumentException("Invalid event format! Use: event <task> /from <start> /to <end>");
+                        throw new IllegalArgumentException("I can only add an event once I have both start and end times. Try: event <task> /from <start> /to <end>");
                     }
 
                     String content = parts[0].trim();
@@ -143,24 +160,24 @@ public class Morpheus {
                     tasklist.add(new Event(content, startTime, endTime));
 
                 } else {
-                    throw new IllegalArgumentException("Unknown task type! Please use 'todo', 'deadline', or 'event'.");
+                    throw new IllegalArgumentException("I didn’t recognise that task type. Please start with 'todo', 'deadline', or 'event' and I’ll take it from there.");
                 }
 
                 // Success message
-                String output = String.format("Added Task: \n %s", tasklist.get(tasklist.size() - 1));
-                String taskLength = String.format("Now you have %d tasks in your task list.", tasklist.size());
-                String printMessage = "------------------------------------------------------------\n" +
+                String output = String.format("Added this task:\n %s", tasklist.get(tasklist.size() - 1));
+                String taskLength = String.format("You now have %d task(s) on your list. Nice progress!", tasklist.size());
+                String printMessage = HORIZONTAL_LINE +
                         output + "\n" + taskLength + "\n" +
-                        "------------------------------------------------------------\n";
+                        HORIZONTAL_LINE;
                 System.out.println(printMessage);
 
             } catch (IllegalArgumentException e) {
-                System.out.println("Error: " + e.getMessage());
+                System.out.println("Sorry, " + e.getMessage());
             } catch (Exception e) {
-                System.out.println("Unexpected error while adding task: " + e.getMessage());
+                System.out.println("Sorry, something unexpected happened while adding that task. Could I trouble you to add it in again?");
             }
         } else {
-            System.out.println("Invalid input! Please enter a non-empty task.");
+            System.out.println("Looks like that line was empty. Whenever you’re ready, type a task and I’ll add it for you.");
         }
     }
 }
