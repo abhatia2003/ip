@@ -111,11 +111,56 @@ public class Morpheus {
     }
 
     private static void addTask(String input, List<Task> tasklist) {
-        tasklist.add(new Task(input));
-        String output = String.format("Added Task: %s", input);
-        String printMessage = "------------------------------------------------------------\n" +
-                output + "\n" +
-                "------------------------------------------------------------\n";
-        System.out.println(printMessage);
+        if (!input.isEmpty()) {
+            try {
+                input = input.trim();
+                if (input.toLowerCase().startsWith("todo")) {
+                    tasklist.add(new ToDo(input.substring(4).trim()));
+
+                } else if (input.toLowerCase().startsWith("deadline")) {
+                    input = input.substring(9).trim();
+                    String[] parts = input.split("(?i)/by");
+
+                    if (parts.length < 2) {
+                        throw new IllegalArgumentException("Invalid deadline format! Use: deadline <task> /by <time>");
+                    }
+
+                    String content = parts[0].trim();
+                    String endTime = parts[1].trim();
+                    tasklist.add(new Deadline(content, endTime));
+
+                } else if (input.toLowerCase().startsWith("event")) {
+                    input = input.substring(6).trim();
+                    String[] parts = input.split("(?i)/from|/to");
+
+                    if (parts.length < 3) {
+                        throw new IllegalArgumentException("Invalid event format! Use: event <task> /from <start> /to <end>");
+                    }
+
+                    String content = parts[0].trim();
+                    String startTime = parts[1].trim();
+                    String endTime = parts[2].trim();
+                    tasklist.add(new Event(content, startTime, endTime));
+
+                } else {
+                    throw new IllegalArgumentException("Unknown task type! Please use 'todo', 'deadline', or 'event'.");
+                }
+
+                // Success message
+                String output = String.format("Added Task: \n %s", tasklist.get(tasklist.size() - 1));
+                String taskLength = String.format("Now you have %d tasks in your task list.", tasklist.size());
+                String printMessage = "------------------------------------------------------------\n" +
+                        output + "\n" + taskLength + "\n" +
+                        "------------------------------------------------------------\n";
+                System.out.println(printMessage);
+
+            } catch (IllegalArgumentException e) {
+                System.out.println("Error: " + e.getMessage());
+            } catch (Exception e) {
+                System.out.println("Unexpected error while adding task: " + e.getMessage());
+            }
+        } else {
+            System.out.println("Invalid input! Please enter a non-empty task.");
+        }
     }
 }
