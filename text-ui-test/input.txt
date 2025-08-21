@@ -1,0 +1,9 @@
+event Go Gym /from Monday 2pm /to 3pm
+deadline Assignment /by Friday 9pm
+todo Meet Friends
+mark 3
+list
+mark 2
+unmark 2
+abc
+bye
