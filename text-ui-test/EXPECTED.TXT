@@ -64,6 +64,12 @@ All set. I've marked this task as not done:
 [D] [ ] Assignment (by: Friday 9pm)
 ------------------------------------------------------------
 
+------------------------------------------------------------
+Got it! I've removed this task:
+[E] [ ] Go Gym (from: Monday 2pm to: 3pm)
+You now have 2 task(s) on your list. Great work!
+------------------------------------------------------------
+
 Sorry, I didn't recognise that task type. Please start with 'todo', 'deadline', or 'event' and I'll take it from there.
 ------------------------------------------------------------
 Thanks for spending time with me today. Press Run anytime to start me again. See you soon!
