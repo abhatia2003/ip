@@ -7,11 +7,12 @@ public class Morpheus {
     public static final String TODO = "todo";
     public static final String DEADLINE = "deadline";
     public static final String EVENT = "event";
+    public static final Storage storage = new Storage();
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         String input;
-        List<Task> tasklist = new ArrayList<>();
+        List<Task> tasklist = storage.load();
         welcomeMessage();
         while (true) {
             input = sc.nextLine();
@@ -21,17 +22,22 @@ public class Morpheus {
             }
             if (input.equalsIgnoreCase("bye")) {
                 byeMessage();
+                storage.save(tasklist);
                 break;
             } else if (input.equalsIgnoreCase("list")) {
                 listMessage(tasklist);
             } else if (input.trim().toLowerCase().startsWith("mark")) {
                 markMessage(input, tasklist);
+                storage.save(tasklist);
             } else if (input.trim().toLowerCase().startsWith("unmark")) {
                 unmarkMessage(input, tasklist);
+                storage.save(tasklist);
             } else if (input.trim().toLowerCase().startsWith("delete")) {
                 deleteTask(input, tasklist);
+                storage.save(tasklist);
             } else {
                 addTask(input, tasklist);
+                storage.save(tasklist);
             }
         }
         sc.close();
