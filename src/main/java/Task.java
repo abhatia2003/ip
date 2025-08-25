@@ -7,6 +7,11 @@ public class Task {
         this.isDone = false;
     }
 
+    public Task(String description, boolean isDone) {
+        this.description = description;
+        this.isDone = isDone;
+    }
+
     public String getStatusIcon() {
         return (this.isDone ? "X" : " ");
     }
@@ -21,6 +26,17 @@ public class Task {
 
     public String getDescription() {
         return this.description;
+    }
+
+    public static String clean(String s) {
+        if (s == null) return "";
+        return s.replace("\r", " ")
+                .replace("\n", " ")
+                .trim();
+    }
+
+    public String encode() {
+        return null;
     }
 
     @Override
