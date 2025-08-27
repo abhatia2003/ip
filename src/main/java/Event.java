@@ -1,28 +1,28 @@
 public class Event extends Task {
-    private String startTime;
-    private String endTime;
+    private final CustomDateTime startDateTime;
+    private final CustomDateTime endDateTime;
 
-    public Event(String description, String startTime, String endTime) {
+    public Event(String description, CustomDateTime startDateTime, CustomDateTime endDateTime) {
         super(description);
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
     }
 
-    public Event(String description, boolean isDone, String startTime, String endTime) {
+    public Event(String description, boolean isDone, CustomDateTime startDateTime, CustomDateTime endDateTime) {
         super(description, isDone);
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
     }
 
     @Override
     public String encode() {
         return "E | " + (this.isDone ? "1" : "0") + " | "
                 + clean(description) + " | "
-                + clean(this.startTime) + " | " + clean(this.endTime);
+                + this.startDateTime.toString() + " | " + this.endDateTime.toString();
     }
 
     @Override
     public String toString() {
-        return String.format("[E] %s (from: %s to: %s)", super.toString(), this.startTime, this.endTime);
+        return String.format("[E] %s (from: %s to: %s)", super.toString(), this.startDateTime.toString(), this.endDateTime.toString());
     }
 }

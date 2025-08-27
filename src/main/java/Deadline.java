@@ -1,24 +1,24 @@
 public class Deadline extends Task{
-    private String endTime;
+    private final CustomDateTime endDateTime;
 
-    public Deadline(String description, String endTime) {
+    public Deadline(String description, CustomDateTime endDateTime) {
         super(description);
-        this.endTime = endTime;
+        this.endDateTime = endDateTime;
     }
 
-    public Deadline(String description, boolean isDone, String endTime) {
+    public Deadline(String description, boolean isDone, CustomDateTime endDateTime) {
         super (description, isDone);
-        this.endTime = endTime;
+        this.endDateTime = endDateTime;
     }
 
     @Override
     public String encode() {
         return "D | " + (this.isDone ? "1" : "0") + " | "
-                + clean(description) + " | " + clean(this.endTime);
+                + clean(description) + " | " + this.endDateTime.toString();
     }
 
     @Override
     public String toString() {
-        return String.format("[D] %s (by: %s)", super.toString(), this.endTime);
+        return String.format("[D] %s (by: %s)", super.toString(), this.endDateTime.toString());
     }
 }

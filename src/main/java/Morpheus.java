@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -17,7 +16,8 @@ public class Morpheus {
         while (true) {
             input = sc.nextLine();
             if (input.isEmpty()) {
-                System.out.println("Looks like that line was empty. Try adding a task with 'todo', 'deadline', or 'event'. I'm ready when you are!");
+                System.out.println("Looks like that line was empty. Try adding a task with 'todo', " +
+                        "'deadline', or 'event'. I'm ready when you are!");
                 continue; // or print a gentle prompt
             }
             if (input.equalsIgnoreCase("bye")) {
@@ -149,7 +149,8 @@ public class Morpheus {
                 if (input.toLowerCase().startsWith(TODO)) {
                     String task = input.substring(TODO.length()).trim();
                     if (task.length() < 2) {
-                        throw new IllegalArgumentException("your todo description looks a bit short. Try: todo <description>");
+                        throw new IllegalArgumentException("your todo description looks a bit short. " +
+                                "Try: todo <description>");
                     }
                     tasklist.add(new ToDo(task));
                 } else if (input.toLowerCase().startsWith(DEADLINE)) {
@@ -157,11 +158,12 @@ public class Morpheus {
                     String[] parts = input.split("(?i)/by");
 
                     if (parts.length < 2) {
-                        throw new IllegalArgumentException("I can only add a deadline once I have a due time. Try: deadline <task> /by <time>");
+                        throw new IllegalArgumentException("I can only add a deadline once I have a due time. " +
+                                "Try: deadline <task> /by <time>");
                     }
 
                     String content = parts[0].trim();
-                    String endTime = parts[1].trim();
+                    CustomDateTime endTime = new CustomDateTime(parts[1].trim());
                     tasklist.add(new Deadline(content, endTime));
 
                 } else if (input.toLowerCase().startsWith(EVENT)) {
@@ -169,21 +171,30 @@ public class Morpheus {
                     String[] parts = input.split("(?i)/from|/to");
 
                     if (parts.length < 3) {
-                        throw new IllegalArgumentException("I can only add an event once I have both start and end times. Try: event <task> /from <start> /to <end>");
+                        throw new IllegalArgumentException("I can only add an event once I have both start and " +
+                                "end times. Try: event <task> /from <start> /to <end>");
                     }
 
                     String content = parts[0].trim();
-                    String startTime = parts[1].trim();
-                    String endTime = parts[2].trim();
+                    CustomDateTime startTime = new CustomDateTime(parts[1].trim());
+                    CustomDateTime endTime = new CustomDateTime(parts[2].trim());
+                    if (endTime.compareTo(startTime) == -1) {
+                        throw new IllegalArgumentException("the end time can only happen after the event has " +
+                                "started. Please try again with a valid set of timings");
+                    }
+
                     tasklist.add(new Event(content, startTime, endTime));
 
                 } else {
-                    throw new IllegalArgumentException("I didn't recognise that task type. Please start with 'todo', 'deadline', or 'event' and I'll take it from there.");
+                    throw new IllegalArgumentException("I didn't recognise that task type. Please start " +
+                            "with 'todo', 'deadline', or 'event' and I'll take it from there.");
                 }
 
                 // Success message
                 String output = String.format("Added this task:\n %s", tasklist.get(tasklist.size() - 1));
-                String taskLength = String.format("You now have %d task(s) on your list. Nice progress!", tasklist.size());
+                String taskLength = String.format(
+                        "You now have %d task(s) on your list. Nice progress!",
+                        tasklist.size());
                 String printMessage = HORIZONTAL_LINE +
                         output + "\n" + taskLength + "\n" +
                         HORIZONTAL_LINE;
@@ -192,10 +203,12 @@ public class Morpheus {
             } catch (IllegalArgumentException e) {
                 System.out.println("Sorry, " + e.getMessage());
             } catch (Exception e) {
-                System.out.println("Sorry, something unexpected happened while adding that task. Could I trouble you to add it in again?");
+                System.out.println("Sorry, something unexpected happened while adding that task. " +
+                        "Could I trouble you to add it in again?");
             }
         } else {
-            System.out.println("Looks like that line was empty. Whenever you're ready, type a task and I'll add it for you.");
+            System.out.println("Looks like that line was empty. Whenever you're ready, type a task and " +
+                    "I'll add it for you.");
         }
     }
 
