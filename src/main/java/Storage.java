@@ -1,4 +1,3 @@
-// Storage.java
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
@@ -71,9 +70,9 @@ public class Storage {
                 case "T":
                     return Optional.of(new ToDo(parts[2], completionStatus));
                 case "D":
-                    return Optional.of(new Deadline(parts[2], completionStatus, parts[3]));
+                    return Optional.of(new Deadline(parts[2], completionStatus, new CustomDateTime(parts[3])));
                 case "E":
-                    return Optional.of(new Event(parts[2], completionStatus, parts[3], parts[4]));
+                    return Optional.of(new Event(parts[2], completionStatus, new CustomDateTime(parts[3]), new CustomDateTime(parts[4])));
                 default:
                     System.err.println("[SKIP] Unknown type: " + type + " in line: " + line);
                     return Optional.empty();
