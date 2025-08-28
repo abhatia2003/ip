@@ -1,3 +1,7 @@
+package Morpheus.Utils;
+
+import Morpheus.Commands.*;
+
 public class Parser {
      public static Command parse(String input) {
          if (input.equalsIgnoreCase("bye")) {

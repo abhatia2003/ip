@@ -1,3 +1,7 @@
+package Morpheus.Tasks;
+
+import Morpheus.Utils.CustomDateTime;
+
 public class EventTask extends Task {
     private final CustomDateTime startDateTime;
     private final CustomDateTime endDateTime;

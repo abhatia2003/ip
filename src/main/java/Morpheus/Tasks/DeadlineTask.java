@@ -1,4 +1,8 @@
-public class DeadlineTask extends Task{
+package Morpheus.Tasks;
+
+import Morpheus.Utils.CustomDateTime;
+
+public class DeadlineTask extends Task {
     private final CustomDateTime endDateTime;
 
     public DeadlineTask(String description, CustomDateTime endDateTime) {

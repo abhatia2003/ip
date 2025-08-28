@@ -1,3 +1,11 @@
+package Morpheus;
+
+import Morpheus.Commands.Command;
+import Morpheus.Tasks.Task;
+import Morpheus.Utils.Parser;
+import Morpheus.Utils.Storage;
+import Morpheus.Utils.Ui;
+
 import java.util.List;
 
 public class Morpheus {

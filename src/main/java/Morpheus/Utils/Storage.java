@@ -1,7 +1,17 @@
+package Morpheus.Utils;
+
+import Morpheus.Tasks.DeadlineTask;
+import Morpheus.Tasks.EventTask;
+import Morpheus.Tasks.Task;
+import Morpheus.Tasks.ToDoTask;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 public class Storage {
     private final Path file;
@@ -32,6 +42,7 @@ public class Storage {
                         .map(Storage::decodeTask)
                         .flatMap(Optional::stream)
                         .forEach(taskList::add);
+
             }
         } catch (IOException e) {
             System.err.println("[WARN] Could not read save file: " + e.getMessage());
@@ -77,9 +88,14 @@ public class Storage {
                 case "T":
                     return Optional.of(new ToDoTask(parts[2], completionStatus));
                 case "D":
-                    return Optional.of(new DeadlineTask(parts[2], completionStatus, new CustomDateTime(parts[3])));
+                    System.out.println("DEADLINE");
+                    String deadlineEndTime = decodeTime(parts[3]);
+                    return Optional.of(new DeadlineTask(parts[2], completionStatus, new CustomDateTime(deadlineEndTime)));
                 case "E":
-                    return Optional.of(new EventTask(parts[2], completionStatus, new CustomDateTime(parts[3]), new CustomDateTime(parts[4])));
+                    System.out.println("EVENT");
+                    String eventStartTime = decodeTime(parts[3]);
+                    String eventEndTime = decodeTime(parts[4]);
+                    return Optional.of(new EventTask(parts[2], completionStatus, new CustomDateTime(eventStartTime), new CustomDateTime(eventEndTime)));
                 default:
                     System.err.println("[SKIP] Unknown type: " + type + " in line: " + line);
                     return Optional.empty();
@@ -88,5 +104,13 @@ public class Storage {
             System.err.println("[SKIP] Corrupted line: " + line);
             return Optional.empty();
         }
+    }
+
+    public static String decodeTime(String input) {
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("d MMM yyyy, h:mm a", Locale.ENGLISH);
+        LocalDateTime dateTime = LocalDateTime.parse(input, inputFormatter);
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("d/M/yyyy HHmm");
+
+        return dateTime.format(outputFormatter);
     }
 }

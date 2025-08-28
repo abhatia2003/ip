@@ -1,3 +1,7 @@
+package Morpheus.Utils;
+
+import Morpheus.Tasks.Task;
+
 import java.util.List;
 import java.util.Scanner;
 
