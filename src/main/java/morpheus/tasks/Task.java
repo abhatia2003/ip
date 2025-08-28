@@ -26,10 +26,6 @@ public class Task {
         this.isDone = false;
     }
 
-    public String getDescription() {
-        return this.description;
-    }
-
     public static String clean(String s) {
         if (s == null) return "";
         return s.replace("\r", " ")

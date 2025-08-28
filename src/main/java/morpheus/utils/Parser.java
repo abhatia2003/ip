@@ -4,22 +4,19 @@ import morpheus.commands.*;
 
 public class Parser {
      public static Command parse(String input) {
-         if (input.equalsIgnoreCase("bye")) {
-             return new ByeCommand(input);
-         } else if (input.equalsIgnoreCase("list")) {
-             return new ListCommand(input);
-         } else if (input.trim().toLowerCase().startsWith("mark")) {
-             return new MarkCommand(input);
-         } else if (input.trim().toLowerCase().startsWith("unmark")) {
-             return new MarkCommand(input);
-         } else if (input.trim().toLowerCase().startsWith("delete")) {
-             return new DeleteCommand(input);
-         } else if (input.trim().toLowerCase().startsWith("event")
-                 || input.trim().toLowerCase().startsWith("todo")
-                 || input.trim().toLowerCase().startsWith("deadline")) {
-            return new AddCommand(input);
-         } else {
-             return null;
+         String[] parts = input.trim().toLowerCase().split("\\s+", 2);
+         String command = parts[0];
+
+         switch (command) {
+             case "bye": return new ByeCommand(input);
+             case "list": return new ListCommand(input);
+             case "unmark": return new UnmarkCommand(input);
+             case "mark": return new MarkCommand(input);
+             case "delete": return new DeleteCommand(input);
+             case "event":
+             case "todo":
+             case "deadline": return new AddCommand(input);
+             default: return null;
          }
      }
 }
