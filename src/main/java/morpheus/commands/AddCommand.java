@@ -4,24 +4,52 @@ import morpheus.utils.CustomDateTime;
 import morpheus.utils.Storage;
 import morpheus.tasks.DeadlineTask;
 import morpheus.tasks.EventTask;
-import morpheus.tasks.Task;
 import morpheus.tasks.ToDoTask;
+import morpheus.tasks.Task;
 import morpheus.utils.Ui;
 
 import java.util.List;
 
-public class AddCommand extends Command{
+/**
+ * Represents a command that adds a new task to the task list.
+ * <p>
+ * This command is triggered when the user enters one of the following formats:
+ * <ul>
+ *   <li><code>todo &lt;description&gt;</code></li>
+ *   <li><code>deadline &lt;description&gt; /by &lt;endTime&gt;</code></li>
+ *   <li><code>event &lt;description&gt; /from &lt;startTime&gt; /to &lt;endTime&gt;</code></li>
+ * </ul>
+ * </p>
+ *
+ * Depending on the input, a {@link ToDoTask}, {@link DeadlineTask}, or {@link EventTask}
+ * is created and added to the provided task list. The {@link Ui} displays a confirmation
+ * message and the updated list is saved to {@link Storage}.
+ *
+ * @author Aayush
+ */
+public class AddCommand extends Command {
     public static final String TODO = "todo";
     public static final String DEADLINE = "deadline";
     public static final String EVENT = "event";
     public static final String INVALID_TYPE = "invalid";
-    public String type;
+    private String type;
 
+    /**
+     * Creates a new AddCommand based on the user's raw input.
+     *
+     * @param input the raw user input string that specifies the task type and details
+     */
     public AddCommand(String input) {
         super(input);
         this.type = parseType(input.trim());
     }
 
+    /**
+     * Determines the type of task based on the user's input.
+     *
+     * @param input the trimmed, lowercase user input
+     * @return one of {@link #TODO}, {@link #DEADLINE}, {@link #EVENT}, or {@link #INVALID_TYPE}
+     */
     private String parseType(String input) {
         if (input.toLowerCase().startsWith(TODO)) {
             return TODO;
@@ -34,6 +62,36 @@ public class AddCommand extends Command{
         }
     }
 
+    /**
+     * Executes the add command by creating the appropriate task based on
+     * the parsed type and adding it to the provided task list.
+     * <p>
+     * Supported behaviors:
+     * <ul>
+     *   <li><b>ToDo:</b> requires only a description</li>
+     *   <li><b>Deadline:</b> requires a description and a due time introduced with <code>/by</code></li>
+     *   <li><b>Event:</b> requires a description, a start time introduced with <code>/from</code>,
+     *       and an end time introduced with <code>/to</code></li>
+     * </ul>
+     * </p>
+     *
+     * After successfully adding the task:
+     * <ul>
+     *   <li>The {@link Ui} displays a confirmation message</li>
+     *   <li>The {@link Storage} persists the updated task list</li>
+     * </ul>
+     *
+     * Error handling:
+     * <ul>
+     *   <li>Invalid or missing description → {@link IllegalArgumentException}</li>
+     *   <li>Missing or malformed date/time arguments → {@link IllegalArgumentException}</li>
+     *   <li>Other unexpected failures are caught and reported gracefully</li>
+     * </ul>
+     *
+     * @param taskList the list of tasks to which the new task is added
+     * @param storage the storage handler used to save the updated task list
+     * @param ui the user interface handler responsible for displaying messages
+     */
     @Override
     public void execute(List<Task> taskList, Storage storage, Ui ui) {
         if (!this.input.isEmpty()) {

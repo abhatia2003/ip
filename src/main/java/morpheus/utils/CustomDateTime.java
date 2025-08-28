@@ -3,6 +3,44 @@ package morpheus.utils;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Represents a custom date-time object that stores a {@link LocalDate}
+ * with optional hour and minute fields.
+ * <p>
+ * This class extends the functionality of {@link LocalDate} by allowing
+ * partial date inputs (with or without a year) and flexible time formats.
+ * It is primarily used by tasks (e.g., Deadline and Event) in the Morpheus
+ * task manager.
+ * </p>
+ *
+ * <h3>Supported date formats:</h3>
+ * <ul>
+ *   <li><code>d/m/yyyy</code> (e.g., 28/8/2025)</li>
+ *   <li><code>d/m</code> (defaults to the current year)</li>
+ * </ul>
+ *
+ * <h3>Supported time formats:</h3>
+ * <ul>
+ *   <li><code>hh:mm</code> or <code>h:mm</code> (24-hour or 12-hour)</li>
+ *   <li><code>hhmm</code> (e.g., 0930, 1805)</li>
+ *   <li><code>hmm</code> (e.g., 930)</li>
+ *   <li><code>hAM/PM</code> or <code>hhAM/PM</code> (e.g., 8PM, 12AM)</li>
+ *   <li><code>h:mm AM/PM</code> (e.g., 8:30 PM)</li>
+ * </ul>
+ *
+ * This class also provides pretty-printing for user-facing output and
+ * implements {@link Comparable} for natural ordering.
+ *
+ * Example usage:
+ * <pre>
+ * CustomDateTime d1 = new CustomDateTime("28/8/2025 1800");
+ * CustomDateTime d2 = new CustomDateTime(LocalDate.now());
+ * System.out.println(d1); // 28 Aug 2025, 6:00 PM
+ * System.out.println(d2); // 28 Aug 2025
+ * </pre>
+ *
+ * @author Aayush
+ */
 public class CustomDateTime implements Comparable<CustomDateTime> {
     private final LocalDate date;
     private final Integer hour;
@@ -11,6 +49,12 @@ public class CustomDateTime implements Comparable<CustomDateTime> {
 
     private static final DateTimeFormatter DATE_PRETTY = DateTimeFormatter.ofPattern("d MMM yyyy");
 
+    /**
+     * Creates a {@code CustomDateTime} by parsing a string input.
+     *
+     * @param date the date string to parse
+     * @throws IllegalArgumentException if the string is null, empty, or invalid
+     */
     public CustomDateTime(String date) {
         this.date = parse(date).date;
         this.hour = parse(date).hour;
@@ -18,6 +62,13 @@ public class CustomDateTime implements Comparable<CustomDateTime> {
         this.hasTime = parse(date).hasTime;
     }
 
+    /**
+     * Creates a {@code CustomDateTime} with a specific date and time.
+     *
+     * @param date  the date
+     * @param hour  the hour (0–23)
+     * @param minute the minute (0–59)
+     */
     public CustomDateTime(LocalDate date, Integer hour, Integer minute) {
         this.date = date;
         this.hour = hour;
@@ -25,6 +76,11 @@ public class CustomDateTime implements Comparable<CustomDateTime> {
         this.hasTime = true;
     }
 
+    /**
+     * Creates a {@code CustomDateTime} with a date only (no time).
+     *
+     * @param date the date
+     */
     public CustomDateTime(LocalDate date) {
         this.date = date;
         this.hour = null;
@@ -146,6 +202,14 @@ public class CustomDateTime implements Comparable<CustomDateTime> {
         return (n < 10 ? "0" : "") + n;
     }
 
+    /**
+     * Compares this {@code CustomDateTime} to another, first by date,
+     * then by hour, then by minute.
+     *
+     * @param other the other date-time to compare
+     * @return a negative integer, zero, or a positive integer as this
+     *         object is earlier than, equal to, or later than the specified object
+     */
     @Override
     public int compareTo(CustomDateTime other) {
         int cmp = this.date.compareTo(other.date);
@@ -155,6 +219,15 @@ public class CustomDateTime implements Comparable<CustomDateTime> {
         return Integer.compare(this.minute, other.minute);
     }
 
+    /**
+     * Returns a user-friendly string representation of this date-time.
+     * <p>
+     * If a time is present, it is shown in 12-hour format with AM/PM.
+     * Otherwise, only the date is displayed.
+     * </p>
+     *
+     * @return the formatted string representation
+     */
     @Override
     public String toString() {
         return hasTime

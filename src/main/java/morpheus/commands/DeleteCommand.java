@@ -1,17 +1,53 @@
 package morpheus.commands;
 
 import morpheus.utils.Storage;
-import morpheus.tasks.Task;
 import morpheus.utils.Ui;
+import morpheus.tasks.Task;
 
 import java.util.List;
 
+/**
+ * Represents a command that deletes a task from the task list.
+ * <p>
+ * This command is triggered when the user enters the keyword:
+ * <code>delete {taskNumber}</code>.
+ * </p>
+ *
+ * Upon execution, the specified task is removed from the list,
+ * a confirmation message is displayed to the user, and the updated
+ * task list is shown.
+ *
+ * Example usage:
+ * <pre>
+ * delete 2
+ * </pre>
+ * This removes the second task in the list.
+ *
+ * @author Aayush
+ */
 public class DeleteCommand extends Command {
 
+    /**
+     * Creates a new DeleteCommand.
+     *
+     * @param input the raw user input that triggered this command
+     */
     public DeleteCommand(String input) {
         super(input);
     }
 
+    /**
+     * Executes the delete command by removing the specified task
+     * from the task list.
+     * <p>
+     * The {@link Ui} is used to display a confirmation message with
+     * the deleted task and the updated task count.
+     * </p>
+     *
+     * @param taskList the list of tasks
+     * @param storage  the storage handler (unused here, but part of the interface)
+     * @param ui       the user interface handler responsible for displaying messages
+     */
     @Override
     public void execute(List<Task> taskList, Storage storage, Ui ui) {
         try {
