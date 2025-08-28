@@ -1,12 +1,12 @@
-package Morpheus.Commands;
+package morpheus.commands;
 
-import Morpheus.Utils.CustomDateTime;
-import Morpheus.Utils.Storage;
-import Morpheus.Tasks.DeadlineTask;
-import Morpheus.Tasks.EventTask;
-import Morpheus.Tasks.Task;
-import Morpheus.Tasks.ToDoTask;
-import Morpheus.Utils.Ui;
+import morpheus.utils.CustomDateTime;
+import morpheus.utils.Storage;
+import morpheus.tasks.DeadlineTask;
+import morpheus.tasks.EventTask;
+import morpheus.tasks.Task;
+import morpheus.tasks.ToDoTask;
+import morpheus.utils.Ui;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
-package Morpheus.Utils;
+package morpheus.utils;
 
-import Morpheus.Tasks.Task;
+import morpheus.tasks.Task;
 
 import java.util.List;
 import java.util.Scanner;

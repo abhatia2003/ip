@@ -1,10 +1,10 @@
-package Morpheus;
+package morpheus;
 
-import Morpheus.Commands.Command;
-import Morpheus.Tasks.Task;
-import Morpheus.Utils.Parser;
-import Morpheus.Utils.Storage;
-import Morpheus.Utils.Ui;
+import morpheus.commands.Command;
+import morpheus.tasks.Task;
+import morpheus.utils.Parser;
+import morpheus.utils.Storage;
+import morpheus.utils.Ui;
 
 import java.util.List;
 

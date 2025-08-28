@@ -1,4 +1,4 @@
-package Morpheus.Tasks;
+package morpheus.tasks;
 
 public class ToDoTask extends Task {
     public ToDoTask(String description) {

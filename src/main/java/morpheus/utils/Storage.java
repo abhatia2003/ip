@@ -1,9 +1,9 @@
-package Morpheus.Utils;
+package morpheus.utils;
 
-import Morpheus.Tasks.DeadlineTask;
-import Morpheus.Tasks.EventTask;
-import Morpheus.Tasks.Task;
-import Morpheus.Tasks.ToDoTask;
+import morpheus.tasks.DeadlineTask;
+import morpheus.tasks.EventTask;
+import morpheus.tasks.Task;
+import morpheus.tasks.ToDoTask;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;

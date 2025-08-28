@@ -1,8 +1,8 @@
-package Morpheus.Commands;
+package morpheus.commands;
 
-import Morpheus.Utils.Storage;
-import Morpheus.Tasks.Task;
-import Morpheus.Utils.Ui;
+import morpheus.utils.Storage;
+import morpheus.tasks.Task;
+import morpheus.utils.Ui;
 
 import java.util.List;
 

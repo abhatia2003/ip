@@ -1,6 +1,6 @@
-package Morpheus.Utils;
+package morpheus.utils;
 
-import Morpheus.Commands.*;
+import morpheus.commands.*;
 
 public class Parser {
      public static Command parse(String input) {
