@@ -1,10 +1,10 @@
 package morpheus.commands;
 
+import java.util.List;
+
 import morpheus.tasks.Task;
 import morpheus.utils.Storage;
 import morpheus.utils.Ui;
-
-import java.util.List;
 
 public class UnmarkCommand extends Command {
     public UnmarkCommand(String input) {
@@ -20,9 +20,11 @@ public class UnmarkCommand extends Command {
             ui.unmarkMessage(task.toString());
             storage.save(taskList);
         } catch (IndexOutOfBoundsException e) {
-            System.out.println("I couldn't find that task number. Try 'list' to see what's available, then pick a number from there.");
+            System.out.println("I couldn't find that task number. "
+                    + "Try 'list' to see what's available, then pick a number from there.");
         } catch (NumberFormatException e) {
-            System.out.println("It seems I couldn't spot a task number after 'unmark'. You can try something like: unmark 2");
+            System.out.println("It seems I couldn't spot a task number after 'unmark'. "
+                    + "You can try something like: unmark 2");
         }
     }
 }

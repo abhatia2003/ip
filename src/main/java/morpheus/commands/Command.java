@@ -1,14 +1,14 @@
 package morpheus.commands;
 
-import morpheus.utils.Storage;
-import morpheus.tasks.Task;
-import morpheus.utils.Ui;
-
 import java.util.List;
 
+import morpheus.tasks.Task;
+import morpheus.utils.Storage;
+import morpheus.utils.Ui;
+
 public abstract class Command {
-    public String input;
-    public boolean isExit = false;
+    protected String input;
+    protected boolean isExit = false;
 
     public Command(String input) {
         this.input = input;

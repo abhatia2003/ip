@@ -1,21 +1,21 @@
 package morpheus.commands;
 
-import morpheus.utils.CustomDateTime;
-import morpheus.utils.Storage;
+import java.util.List;
+
 import morpheus.tasks.DeadlineTask;
 import morpheus.tasks.EventTask;
 import morpheus.tasks.Task;
 import morpheus.tasks.ToDoTask;
+import morpheus.utils.CustomDateTime;
+import morpheus.utils.Storage;
 import morpheus.utils.Ui;
 
-import java.util.List;
-
-public class AddCommand extends Command{
+public class AddCommand extends Command {
     public static final String TODO = "todo";
     public static final String DEADLINE = "deadline";
     public static final String EVENT = "event";
     public static final String INVALID_TYPE = "invalid";
-    public String type;
+    private String type;
 
     public AddCommand(String input) {
         super(input);
@@ -42,16 +42,16 @@ public class AddCommand extends Command{
                 case TODO:
                     String task = this.input.substring(TODO.length()).trim();
                     if (task.length() < 2) {
-                        throw new IllegalArgumentException("your todo description looks a bit short. " +
-                                "Try: todo <description>");
+                        throw new IllegalArgumentException("your todo description looks a bit short. "
+                                + "Try: todo <description>");
                     }
                     taskList.add(new ToDoTask(task));
                     break;
                 case DEADLINE:
                     String[] deadlineParts = this.input.substring(DEADLINE.length()).trim().split("(?i)/by");
                     if (deadlineParts.length < 2) {
-                        throw new IllegalArgumentException("I can only add a deadline once I have a due time. " +
-                                "Try: deadline <task> /by <time>");
+                        throw new IllegalArgumentException("I can only add a deadline once I have a due time. "
+                                + "Try: deadline <task> /by <time>");
                     }
                     String deadlineContent = deadlineParts[0].trim();
                     CustomDateTime deadlineEndTime = new CustomDateTime(deadlineParts[1].trim());
@@ -60,34 +60,34 @@ public class AddCommand extends Command{
                 case EVENT:
                     String[] eventParts = this.input.substring(EVENT.length()).trim().split("(?i)/from|/to");
                     if (eventParts.length < 3) {
-                        throw new IllegalArgumentException("I can only add an event once I have both start and " +
-                                "end times. Try: event <task> /from <start> /to <end>");
+                        throw new IllegalArgumentException("I can only add an event once I have both start and "
+                                + "end times. Try: event <task> /from <start> /to <end>");
                     }
                     String eventContent = eventParts[0].trim();
                     CustomDateTime eventStartTime = new CustomDateTime(eventParts[1].trim());
                     CustomDateTime eventEndTime = new CustomDateTime(eventParts[2].trim());
                     if (eventEndTime.compareTo(eventStartTime) < -1) {
-                        throw new IllegalArgumentException("the end time can only happen after the event has " +
-                                "started. Please try again with a valid set of timings");
+                        throw new IllegalArgumentException("the end time can only happen after the event has "
+                                + "started. Please try again with a valid set of timings");
                     }
 
                     taskList.add(new EventTask(eventContent, eventStartTime, eventEndTime));
                     break;
                 default:
-                    throw new IllegalArgumentException("I didn't recognise that task type. Please start " +
-                            "with 'todo', 'deadline', or 'event' and I'll take it from there.");
+                    throw new IllegalArgumentException("I didn't recognise that task type. Please start "
+                            + "with 'todo', 'deadline', or 'event' and I'll take it from there.");
                 }
                 ui.addTaskMessage(taskList);
                 storage.save(taskList);
             } catch (IllegalArgumentException e) {
                 System.out.println("Sorry, " + e.getMessage());
             } catch (Exception e) {
-                System.out.println("Sorry, something unexpected happened while adding that task. " +
-                        "Could I trouble you to add it in again?");
+                System.out.println("Sorry, something unexpected happened while adding that task. "
+                        + "Could I trouble you to add it in again?");
             }
         } else {
-            System.out.println("Looks like that line was empty. Whenever you're ready, type a task and " +
-                    "I'll add it for you.");
+            System.out.println("Looks like that line was empty. Whenever you're ready, type a task and "
+                    + "I'll add it for you.");
         }
     }
 }

@@ -1,10 +1,10 @@
 package morpheus.commands;
 
-import morpheus.utils.Storage;
-import morpheus.tasks.Task;
-import morpheus.utils.Ui;
-
 import java.util.List;
+
+import morpheus.tasks.Task;
+import morpheus.utils.Storage;
+import morpheus.utils.Ui;
 
 public class ListCommand extends Command {
     public ListCommand(String input) {

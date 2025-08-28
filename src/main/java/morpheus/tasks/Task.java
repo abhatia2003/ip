@@ -27,7 +27,9 @@ public class Task {
     }
 
     public static String clean(String s) {
-        if (s == null) return "";
+        if (s == null) {
+            return "";
+        }
         return s.replace("\r", " ")
                 .replace("\n", " ")
                 .trim();
