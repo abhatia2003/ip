@@ -1,12 +1,12 @@
-public class Deadline extends Task{
+public class DeadlineTask extends Task{
     private final CustomDateTime endDateTime;
 
-    public Deadline(String description, CustomDateTime endDateTime) {
+    public DeadlineTask(String description, CustomDateTime endDateTime) {
         super(description);
         this.endDateTime = endDateTime;
     }
 
-    public Deadline(String description, boolean isDone, CustomDateTime endDateTime) {
+    public DeadlineTask(String description, boolean isDone, CustomDateTime endDateTime) {
         super (description, isDone);
         this.endDateTime = endDateTime;
     }

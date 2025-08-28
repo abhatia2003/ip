@@ -1,14 +1,14 @@
-public class Event extends Task {
+public class EventTask extends Task {
     private final CustomDateTime startDateTime;
     private final CustomDateTime endDateTime;
 
-    public Event(String description, CustomDateTime startDateTime, CustomDateTime endDateTime) {
+    public EventTask(String description, CustomDateTime startDateTime, CustomDateTime endDateTime) {
         super(description);
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
     }
 
-    public Event(String description, boolean isDone, CustomDateTime startDateTime, CustomDateTime endDateTime) {
+    public EventTask(String description, boolean isDone, CustomDateTime startDateTime, CustomDateTime endDateTime) {
         super(description, isDone);
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;

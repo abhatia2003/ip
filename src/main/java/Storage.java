@@ -6,18 +6,25 @@ import java.util.*;
 public class Storage {
     private final Path file;
 
-    public Storage() {
-        this(Paths.get("data", "morpheus.txt"));
+    public Storage(String filePath) {
+        Path p = Storage.toPath(filePath);
+        try {
+            checkFile(p);
+        } catch (IOException e) {
+            System.err.println("[WARN] Could not initialize file: " + e.getMessage());
+        }
+        this.file = p;
     }
 
-    public Storage(Path file) {
-        this.file = file;
+    private static Path toPath(String filePath) {
+        String[] parts = filePath.split("/");
+        return Paths.get(parts[0], Arrays.copyOfRange(parts, 1, parts.length));
     }
 
     public List<Task> load() {
         List<Task> taskList = new ArrayList<>();
         try {
-            checkFile();
+            checkFile(file);
             try (BufferedReader br = Files.newBufferedReader(file, StandardCharsets.UTF_8)) {
                 br.lines()
                         .map(String::trim)
@@ -34,7 +41,7 @@ public class Storage {
 
     public void save(List<Task> tasks) {
         try {
-            checkFile();
+            checkFile(file);
             try (BufferedWriter bw = Files.newBufferedWriter(
                     file, StandardCharsets.UTF_8,
                     StandardOpenOption.TRUNCATE_EXISTING,
@@ -50,7 +57,7 @@ public class Storage {
         }
     }
 
-    private void checkFile() throws IOException {
+    private void checkFile(Path file) throws IOException {
         if (Files.notExists(file.getParent())) {
             Files.createDirectories(file.getParent());
         }
@@ -68,11 +75,11 @@ public class Storage {
 
             switch (type) {
                 case "T":
-                    return Optional.of(new ToDo(parts[2], completionStatus));
+                    return Optional.of(new ToDoTask(parts[2], completionStatus));
                 case "D":
-                    return Optional.of(new Deadline(parts[2], completionStatus, new CustomDateTime(parts[3])));
+                    return Optional.of(new DeadlineTask(parts[2], completionStatus, new CustomDateTime(parts[3])));
                 case "E":
-                    return Optional.of(new Event(parts[2], completionStatus, new CustomDateTime(parts[3]), new CustomDateTime(parts[4])));
+                    return Optional.of(new EventTask(parts[2], completionStatus, new CustomDateTime(parts[3]), new CustomDateTime(parts[4])));
                 default:
                     System.err.println("[SKIP] Unknown type: " + type + " in line: " + line);
                     return Optional.empty();
