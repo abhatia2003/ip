@@ -1,6 +1,6 @@
 package morpheus.tasks;
 
-public class Task {
+public abstract class Task {
     protected String description;
     protected boolean isDone;
 
@@ -36,6 +36,22 @@ public class Task {
     public String encode() {
         return null;
     }
+
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * Creates a deep copy of this task.
+     * <p>
+     * Subclasses must override this method to return a new instance of the
+     * specific task type with identical field values. This ensures that
+     * copies are independent of the original objects.
+     * </p>
+     *
+     * @return a new {@link Task} instance that is a deep copy of this task
+     */
+    public abstract Task copy();
 
     @Override
     public String toString() {
