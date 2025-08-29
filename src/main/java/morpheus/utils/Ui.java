@@ -5,6 +5,21 @@ import morpheus.tasks.Task;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Handles all user interaction for the Morpheus task manager.
+ * <p>
+ * This class is responsible for:
+ * <ul>
+ *   <li>Reading user input from the command line</li>
+ *   <li>Displaying banners, prompts, and messages to the user</li>
+ *   <li>Presenting task-related updates (add, list, mark, unmark, delete)</li>
+ * </ul>
+ * </p>
+ *
+ * All output is printed to the standard console.
+ *
+ * @author Aayush
+ */
 public class Ui {
     private static final String HORIZONTAL_LINE = "------------------------------------------------------------\n";
     private static final String TODO = "todo";
@@ -12,18 +27,33 @@ public class Ui {
     private static final String EVENT = "event";
     private Scanner scanner;
 
+    /**
+     * Constructs a new {@code Ui} instance with a scanner for user input.
+     */
     public Ui() {
         this.scanner = new Scanner(System.in);
     }
 
+    /**
+     * Reads a line of input from the user.
+     *
+     * @return the input string entered by the user
+     */
     public String readInput() {
         return scanner.nextLine();
     }
 
+    /**
+     * Closes the input scanner. Should be called before program termination.
+     */
     public void closeScanner() {
         scanner.close();
     }
 
+    /**
+     * Displays the welcome banner and introduction message.
+     * Made up of ASCII art for aesthetic purposes.
+     */
     public void welcomeMessage() {
         String welcome = """
      _    _      _                          
@@ -65,6 +95,9 @@ public class Ui {
         System.out.print(init);
     }
 
+    /**
+     * Displays the farewell message and closing banner.
+     */
     public void byeMessage() {
         System.out.println(
                 HORIZONTAL_LINE +
@@ -73,6 +106,15 @@ public class Ui {
         );
     }
 
+    /**
+     * Displays the current task list.
+     * <p>
+     * If the list is empty, shows a message prompting the user to add tasks.
+     * Otherwise, enumerates each task with its index and details.
+     * </p>
+     *
+     * @param tasklist the list of tasks to display
+     */
     public void listMessage(List<Task> tasklist) {
         if (tasklist.size() == 0) {
             System.out.println(
@@ -90,6 +132,11 @@ public class Ui {
         System.out.println(HORIZONTAL_LINE);
     }
 
+    /**
+     * Displays a message confirming a task has been marked as done.
+     *
+     * @param task the task that was marked
+     */
     public void markMessage(String task) {
         String output = HORIZONTAL_LINE +
                 "Nice! I've marked this as completed:\n" +
@@ -98,6 +145,11 @@ public class Ui {
         System.out.println(output);
     }
 
+    /**
+     * Displays a message confirming a task has been marked as not done.
+     *
+     * @param task the task that was unmarked
+     */
     public void unmarkMessage(String task) {
         String output = HORIZONTAL_LINE +
                 "All set. I've marked this task as not done:\n" +
@@ -106,6 +158,12 @@ public class Ui {
         System.out.println(output);
     }
 
+    /**
+     * Displays a message confirming a new task has been added, along with the
+     * updated number of tasks.
+     *
+     * @param taskList the current list of tasks (the most recently added task is shown)
+     */
     public void addTaskMessage(List<Task> taskList) {
         String output = String.format("Added this task:\n %s", taskList.get(taskList.size() - 1));
         String taskLength = String.format(
@@ -117,6 +175,13 @@ public class Ui {
         System.out.println(printMessage);
     }
 
+    /**
+     * Displays a message confirming a task has been deleted, along with the
+     * updated number of tasks.
+     *
+     * @param task     the task that was deleted
+     * @param taskList the updated list of tasks
+     */
     public void deleteTaskMessage(String task, List<Task> taskList) {
         String taskLength = String.format("You now have %d task(s) on your list. Great work!", taskList.size());
         String output = HORIZONTAL_LINE +
