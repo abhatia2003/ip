@@ -50,7 +50,8 @@ public class EventTask extends Task {
 
     /**
      * Encodes the Event task into a string format suitable for storage.
-     * The format is: <code>E | &lt;isDone&gt; | &lt;description&gt; | &lt;startDateTime&gt; | &lt;endDateTime&gt;</code>.
+     * The format is:
+     * <code>E | &lt;isDone&gt; | &lt;description&gt; | &lt;startDateTime&gt; | &lt;endDateTime&gt;</code>.
      *
      * @return the encoded string representation of this Event task
      */
@@ -59,6 +60,25 @@ public class EventTask extends Task {
         return "E | " + (this.isDone ? "1" : "0") + " | "
                 + clean(description) + " | "
                 + this.startDateTime.toString() + " | " + this.endDateTime.toString();
+    }
+
+    /**
+     * Creates a deep copy of this Event task.
+     * <p>
+     * The returned copy has the same description, completion status,
+     * start time, and end time as the original, but is an independent object.
+     * </p>
+     *
+     * @return a new {@link EventTask} with the same values as this task
+     */
+    @Override
+    public Task copy() {
+        return new EventTask(
+                this.description,
+                this.isDone,
+                this.startDateTime,
+                this.endDateTime
+        );
     }
 
     /**

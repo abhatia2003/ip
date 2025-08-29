@@ -35,6 +35,20 @@ public class ToDoTask extends Task {
     }
 
     /**
+     * Creates a deep copy of this ToDo task.
+     * <p>
+     * The returned copy has the same description and completion status
+     * as the original, but is an independent object.
+     * </p>
+     *
+     * @return a new {@link ToDoTask} with the same values as this task
+     */
+    @Override
+    public Task copy() {
+        return new ToDoTask(this.description, this.isDone);
+    }
+
+    /**
      * Encodes the ToDo task into a string format suitable for storage.
      * The format is: <code>T | &lt;isDone&gt; | &lt;description&gt;</code>.
      *

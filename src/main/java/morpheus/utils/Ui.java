@@ -118,9 +118,10 @@ public class Ui {
      */
     public void listMessage(List<Task> tasklist) {
         if (tasklist.size() == 0) {
-            System.out.println(
-                    "Your list is empty for now. Add one with 'todo', 'deadline', or 'event', "
-                            + "and I'll keep track for you."
+            System.out.println(HORIZONTAL_LINE
+                    + "Your list is empty for now. Add one with 'todo', 'deadline', or 'event', "
+                    + "and I'll keep track for you.\n"
+                    + HORIZONTAL_LINE
             );
             return;
         }
@@ -130,6 +131,39 @@ public class Ui {
             String item = String.format("%d. %s", i + 1, tasklist.get(i).toString());
             System.out.println(item);
         }
+        System.out.println(HORIZONTAL_LINE);
+    }
+
+    /**
+     * Displays the results of a task search to the user.
+     * <p>
+     * If no tasks match the search, a message is shown informing the user
+     * that no tasks were found and suggesting how to add new ones.
+     * Otherwise, this method prints a numbered list of matching tasks,
+     * surrounded by horizontal separators for readability.
+     * </p>
+     *
+     * @param filteredTasklist the list of tasks that match the user's search query
+     */
+    public void findMessage(List<Task> filteredTasklist) {
+        if (filteredTasklist.isEmpty()) {
+            System.out.println(HORIZONTAL_LINE
+                    + "I couldn’t find any tasks matching your search. "
+                    + "You can add one using 'todo', 'deadline', or 'event', and I'll track it for you.\n"
+                    + HORIZONTAL_LINE
+            );
+            return;
+        }
+
+        String header = HORIZONTAL_LINE
+                + "Here are the tasks I found that match your search:";
+        System.out.println(header);
+
+        for (int i = 0; i < filteredTasklist.size(); i++) {
+            String item = String.format("%d. %s", i + 1, filteredTasklist.get(i).toString());
+            System.out.println(item);
+        }
+
         System.out.println(HORIZONTAL_LINE);
     }
 

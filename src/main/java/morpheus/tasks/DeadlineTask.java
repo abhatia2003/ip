@@ -43,6 +43,24 @@ public class DeadlineTask extends Task {
     }
 
     /**
+     * Creates a deep copy of this Deadline task.
+     * <p>
+     * The returned copy has the same description, completion status,
+     * and deadline date-time as the original, but is an independent object.
+     * </p>
+     *
+     * @return a new {@link DeadlineTask} with the same values as this task
+     */
+    @Override
+    public Task copy() {
+        return new DeadlineTask(
+                this.description,
+                this.isDone,
+                this.endDateTime
+        );
+    }
+
+    /**
      * Encodes the Deadline task into a string format suitable for storage.
      * The format is: <code>D | &lt;isDone&gt; | &lt;description&gt; | &lt;endDateTime&gt;</code>.
      *

@@ -4,6 +4,7 @@ import morpheus.commands.AddCommand;
 import morpheus.commands.ByeCommand;
 import morpheus.commands.Command;
 import morpheus.commands.DeleteCommand;
+import morpheus.commands.FindCommand;
 import morpheus.commands.ListCommand;
 import morpheus.commands.MarkCommand;
 import morpheus.commands.UnmarkCommand;
@@ -49,6 +50,7 @@ public class Parser {
         switch (command) {
         case "bye": return new ByeCommand(input);
         case "list": return new ListCommand(input);
+        case "find": return new FindCommand(input);
         case "unmark": return new UnmarkCommand(input);
         case "mark": return new MarkCommand(input);
         case "delete": return new DeleteCommand(input);
