@@ -1,10 +1,10 @@
 package morpheus.commands;
 
+import java.util.List;
+
+import morpheus.tasks.Task;
 import morpheus.utils.Storage;
 import morpheus.utils.Ui;
-import morpheus.tasks.Task;
-
-import java.util.List;
 
 /**
  * Represents an abstract user command in the Morpheus task manager.
@@ -28,8 +28,7 @@ public abstract class Command {
     /**
      * The raw input string entered by the user that created this command.
      */
-    protected final String input;
-
+    protected String input;
     /**
      * A flag indicating whether this command causes the program to exit.
      * Defaults to {@code false}.
@@ -63,4 +62,3 @@ public abstract class Command {
         return isExit;
     }
 }
-

@@ -1,10 +1,10 @@
 package morpheus.commands;
 
+import java.util.List;
+
+import morpheus.tasks.Task;
 import morpheus.utils.Storage;
 import morpheus.utils.Ui;
-import morpheus.tasks.Task;
-
-import java.util.List;
 
 /**
  * Represents a command that ends the program.

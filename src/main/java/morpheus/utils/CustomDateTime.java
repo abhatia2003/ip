@@ -42,12 +42,12 @@ import java.time.format.DateTimeFormatter;
  * @author Aayush
  */
 public class CustomDateTime implements Comparable<CustomDateTime> {
+    private static final DateTimeFormatter DATE_PRETTY = DateTimeFormatter.ofPattern("d MMM yyyy");
+
     private final LocalDate date;
     private final Integer hour;
     private final Integer minute;
     private final boolean hasTime;
-
-    private static final DateTimeFormatter DATE_PRETTY = DateTimeFormatter.ofPattern("d MMM yyyy");
 
     /**
      * Creates a {@code CustomDateTime} by parsing a string input.
@@ -89,9 +89,17 @@ public class CustomDateTime implements Comparable<CustomDateTime> {
     }
 
     private static CustomDateTime parse(String endTime) {
-        if (endTime == null) throw new IllegalArgumentException("Deadline not found --> Add a deadline using the format \"/by dd/mm/yyyy\"");
+        if (endTime == null) {
+            throw new IllegalArgumentException(
+                    "Deadline not found --> Add a deadline using the format \"/by dd/mm/yyyy\""
+            );
+        }
         String trimmed = endTime.trim();
-        if (trimmed.isEmpty()) throw new IllegalArgumentException("Deadline not found --> Add a deadline using the format \"/by dd/mm/yyyy\"");
+        if (trimmed.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Deadline not found --> Add a deadline using the format \"/by dd/mm/yyyy\""
+            );
+        }
 
         String[] parts = trimmed.split("\\s+");
 
@@ -99,7 +107,9 @@ public class CustomDateTime implements Comparable<CustomDateTime> {
 
         if (parts.length >= 2) {
             String timeStr = parts[1];
-            if (parts.length >= 3) timeStr += " " + parts[2];
+            if (parts.length >= 3) {
+                timeStr += " " + parts[2];
+            }
             int[] time = parseTimeFlexible(timeStr);
             return new CustomDateTime(date, time[0], time[1]);
         } else {
@@ -117,7 +127,7 @@ public class CustomDateTime implements Comparable<CustomDateTime> {
         } else if (dmy.length == 2) {
             int d = parseVariable(dmy[0], "day");
             int m = parseVariable(dmy[1], "month");
-            int y = LocalDate.now().getYear();   // default to current year
+            int y = LocalDate.now().getYear();
             return LocalDate.of(y, m, d);
         } else {
             throw new IllegalArgumentException("Date must be d/m or d/m/yyyy");
@@ -129,10 +139,13 @@ public class CustomDateTime implements Comparable<CustomDateTime> {
         int h;
         int m;
 
-        if (t.isEmpty()) throw new IllegalArgumentException("Empty time");
+        if (t.isEmpty()) {
+            throw new IllegalArgumentException("Empty time");
+        }
 
         String upper = t.toUpperCase();
-        boolean hasMeridiem = false, isPM = false;
+        boolean hasMeridiem = false;
+        boolean isPM = false;
 
         if (upper.endsWith("AM") || upper.endsWith("PM")) {
             hasMeridiem = true;
@@ -142,9 +155,11 @@ public class CustomDateTime implements Comparable<CustomDateTime> {
 
         if (t.contains(":")) {
             String[] p = t.split(":");
-            if (p.length != 2) throw new IllegalArgumentException(
-                    "Time must be hh:mm/h:mm or h:mm AM/PM"
-            );
+            if (p.length != 2) {
+                throw new IllegalArgumentException(
+                        "Time must be hh:mm/h:mm or h:mm AM/PM"
+                );
+            }
             h = parseVariable(p[0], "hour");
             m = parseVariable(p[1], "minute");
         } else {
@@ -152,10 +167,10 @@ public class CustomDateTime implements Comparable<CustomDateTime> {
                 // e.g., "8pm" → 20:00, "12AM" → 00:00
                 h = parseVariable(t, "hour");
                 m = 0;
-            } else if (t.length() == 4) {        // e.g., 0930, 1805
+            } else if (t.length() == 4) { // e.g., 0930, 1805
                 h = parseVariable(t.substring(0, 2), "hour");
                 m = parseVariable(t.substring(2, 4), "minute");
-            } else if (t.length() == 3) {        // e.g., 930
+            } else if (t.length() == 3) { // e.g., 930
                 h = parseVariable(t.substring(0, 1), "hour");
                 m = parseVariable(t.substring(1, 3), "minute");
             } else {
@@ -166,9 +181,17 @@ public class CustomDateTime implements Comparable<CustomDateTime> {
         }
 
         if (hasMeridiem) {
-            if (h < 1 || h > 12) throw new IllegalArgumentException("hour must be between 1 and 12 for AM/PM time format");
-            if (isPM && h != 12) h += 12;
-            if (!isPM && h == 12) h = 0;
+            if (h < 1 || h > 12) {
+                throw new IllegalArgumentException(
+                        "hour must be between 1 and 12 for AM/PM time format"
+                );
+            }
+            if (isPM && h != 12) {
+                h += 12;
+            }
+            if (!isPM && h == 12) {
+                h = 0;
+            }
         }
 
         if (h < 0 || h > 23 || m < 0 || m > 59) {
@@ -192,13 +215,14 @@ public class CustomDateTime implements Comparable<CustomDateTime> {
     private static String formatTime12(int hour24hFormat, int m) {
         String ampm = (hour24hFormat >= 12) ? "PM" : "AM";
         int hour12hFormat = hour24hFormat % 12;
-        if (hour12hFormat == 0) hour12hFormat = 12;
+        if (hour12hFormat == 0) {
+            hour12hFormat = 12;
+        }
         String twoDigitForm = twoDigitFormat(m);
         return hour12hFormat + ":" + twoDigitForm + " " + ampm;
     }
 
     private static String twoDigitFormat(int n) {
-
         return (n < 10 ? "0" : "") + n;
     }
 
@@ -213,9 +237,13 @@ public class CustomDateTime implements Comparable<CustomDateTime> {
     @Override
     public int compareTo(CustomDateTime other) {
         int cmp = this.date.compareTo(other.date);
-        if (cmp != 0) return cmp;
+        if (cmp != 0) {
+            return cmp;
+        }
         cmp = Integer.compare(this.hour, other.hour);
-        if (cmp != 0) return cmp;
+        if (cmp != 0) {
+            return cmp;
+        }
         return Integer.compare(this.minute, other.minute);
     }
 

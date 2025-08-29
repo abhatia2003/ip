@@ -1,17 +1,25 @@
 package morpheus.utils;
 
-import morpheus.tasks.DeadlineTask;
-import morpheus.tasks.EventTask;
-import morpheus.tasks.ToDoTask;
-import morpheus.tasks.Task;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.*;
-import java.util.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
+
+import morpheus.tasks.DeadlineTask;
+import morpheus.tasks.EventTask;
+import morpheus.tasks.Task;
+import morpheus.tasks.ToDoTask;
 
 /**
  * Handles reading and writing of task data to a persistent file.
@@ -139,18 +147,23 @@ public class Storage {
             boolean completionStatus = "1".equals(parts[1]);
 
             switch (type) {
-                case "T":
-                    return Optional.of(new ToDoTask(parts[2], completionStatus));
-                case "D":
-                    String deadlineEndTime = decodeTime(parts[3]);
-                    return Optional.of(new DeadlineTask(parts[2], completionStatus, new CustomDateTime(deadlineEndTime)));
-                case "E":
-                    String eventStartTime = decodeTime(parts[3]);
-                    String eventEndTime = decodeTime(parts[4]);
-                    return Optional.of(new EventTask(parts[2], completionStatus, new CustomDateTime(eventStartTime), new CustomDateTime(eventEndTime)));
-                default:
-                    System.err.println("[SKIP] Unknown type: " + type + " in line: " + line);
-                    return Optional.empty();
+            case "T":
+                return Optional.of(new ToDoTask(parts[2], completionStatus));
+            case "D":
+                String deadlineEndTime = decodeTime(parts[3]);
+                return Optional.of(new DeadlineTask(parts[2],
+                        completionStatus,
+                        new CustomDateTime(deadlineEndTime)));
+            case "E":
+                String eventStartTime = decodeTime(parts[3]);
+                String eventEndTime = decodeTime(parts[4]);
+                return Optional.of(new EventTask(parts[2],
+                        completionStatus,
+                        new CustomDateTime(eventStartTime),
+                        new CustomDateTime(eventEndTime)));
+            default:
+                System.err.println("[SKIP] Unknown type: " + type + " in line: " + line);
+                return Optional.empty();
             }
         } catch (Exception e) {
             System.err.println("[SKIP] Corrupted line: " + line);
@@ -169,7 +182,8 @@ public class Storage {
      * @return the reformatted string suitable for {@link CustomDateTime}
      */
     public static String decodeTime(String input) {
-        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("d MMM yyyy, h:mm a", Locale.ENGLISH);
+        DateTimeFormatter inputFormatter = DateTimeFormatter
+                .ofPattern("d MMM yyyy, h:mm a", Locale.ENGLISH);
         LocalDateTime dateTime = LocalDateTime.parse(input, inputFormatter);
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("d/M/yyyy HHmm");
         return dateTime.format(outputFormatter);

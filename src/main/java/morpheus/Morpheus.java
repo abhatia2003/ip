@@ -1,12 +1,12 @@
 package morpheus;
 
+import java.util.List;
+
 import morpheus.commands.Command;
+import morpheus.tasks.Task;
 import morpheus.utils.Parser;
 import morpheus.utils.Storage;
 import morpheus.utils.Ui;
-import morpheus.tasks.Task;
-
-import java.util.List;
 
 /**
  * Entry point for the Morpheus task manager application.
@@ -76,8 +76,8 @@ public class Morpheus {
         while (!isExit) {
             input = this.ui.readInput();
             if (input.isEmpty()) {
-                System.out.println("Looks like that line was empty. Try adding a task with 'todo', " +
-                        "'deadline', or 'event'. I'm ready when you are!");
+                System.out.println("Looks like that line was empty. Try adding a task with 'todo', "
+                        + "'deadline', or 'event'. I'm ready when you are!");
                 continue;
             }
             Command command = Parser.parse(input);

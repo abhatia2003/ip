@@ -1,10 +1,10 @@
 package morpheus.commands;
 
-import morpheus.utils.Storage;
-import morpheus.tasks.Task;
-import morpheus.utils.Ui;
-
 import java.util.List;
+
+import morpheus.tasks.Task;
+import morpheus.utils.Storage;
+import morpheus.utils.Ui;
 
 /**
  * Represents a command that marks a task as completed.
@@ -57,11 +57,11 @@ public class MarkCommand extends Command {
             ui.markMessage(task.toString());
             storage.save(taskList);
         } catch (IndexOutOfBoundsException e) {
-            System.out.println("I couldn't find that task number. Try 'list' to see what's available, " +
-                    "then pick a number from there.");
+            System.out.println("I couldn't find that task number. Try 'list' to see what's available, "
+                    + "then pick a number from there.");
         } catch (NumberFormatException e) {
-            System.out.println("It seems I couldn't spot a task number after 'mark'. " +
-                    "You can try something like: mark 2");
+            System.out.println("It seems I couldn't spot a task number after 'mark'. "
+                    + "You can try something like: mark 2");
         }
     }
 }

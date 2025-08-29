@@ -82,7 +82,9 @@ public class Task {
      * @return the cleaned string, or an empty string if {@code s} is null
      */
     public static String clean(String s) {
-        if (s == null) return "";
+        if (s == null) {
+            return "";
+        }
         return s.replace("\r", " ")
                 .replace("\n", " ")
                 .trim();
