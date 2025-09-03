@@ -49,11 +49,11 @@ public class FindCommand extends Command {
      * @param ui       the user interface handler responsible for displaying results
      */
     @Override
-    public void execute(List<Task> taskList, Storage storage, Ui ui) {
+    public String execute(List<Task> taskList, Storage storage, Ui ui) {
         String target = this.input.substring("find".length()).trim();
         if (target.isEmpty()) {
-            System.out.println("It seems like you did not finish your find request. Could you please try again?");
-            return;
+            return "It seems like you did not finish your find request. Could you please try again?";
+
         }
         List<Task> deepCopy = taskList.stream()
                 .map(Task::copy)
@@ -61,6 +61,6 @@ public class FindCommand extends Command {
         List<Task> filteredDeepCopy = deepCopy.stream()
                 .filter(task -> task.getDescription().toLowerCase().contains(target.toLowerCase()))
                 .toList();
-        ui.findMessage(filteredDeepCopy);
+        return ui.findMessage(filteredDeepCopy);
     }
 }

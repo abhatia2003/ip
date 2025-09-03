@@ -1,4 +1,2 @@
-T | 0 | gym
-D | 0 | submit project | 28 Aug 2025, 8:00 PM
-T | 0 | Meet jane
-E | 0 | Go for Event | 24 Apr 2025, 1:00 PM | 24 Apr 2025, 3:00 PM
+E | 0 | Go to the Gym | 25 May 2025, 9:00 PM | 25 May 2025, 10:00 PM
+T | 0 | Meet Friends

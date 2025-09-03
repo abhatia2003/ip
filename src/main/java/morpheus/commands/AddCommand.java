@@ -93,7 +93,7 @@ public class AddCommand extends Command {
      * @param ui the user interface handler responsible for displaying messages
      */
     @Override
-    public void execute(List<Task> taskList, Storage storage, Ui ui) {
+    public String execute(List<Task> taskList, Storage storage, Ui ui) {
         if (!this.input.isEmpty()) {
             try {
                 switch (this.type) {
@@ -135,17 +135,17 @@ public class AddCommand extends Command {
                     throw new IllegalArgumentException("I didn't recognise that task type. Please start "
                             + "with 'todo', 'deadline', or 'event' and I'll take it from there.");
                 }
-                ui.addTaskMessage(taskList);
                 storage.save(taskList);
+                return ui.addTaskMessage(taskList);
             } catch (IllegalArgumentException e) {
-                System.out.println("Sorry, " + e.getMessage());
+                return "Sorry, " + e.getMessage();
             } catch (Exception e) {
-                System.out.println("Sorry, something unexpected happened while adding that task. "
-                        + "Could I trouble you to add it in again?");
+                return "Sorry, something unexpected happened while adding that task. "
+                        + "Could I trouble you to add it in again?";
             }
         } else {
-            System.out.println("Looks like that line was empty. Whenever you're ready, type a task and "
-                    + "I'll add it for you.");
+            return "Looks like that line was empty. Whenever you're ready, type a task and "
+                    + "I'll add it for you.";
         }
     }
 }

@@ -51,7 +51,7 @@ public abstract class Command {
      * @param storage  the storage handler for saving tasks
      * @param ui       the user interface handler for displaying output
      */
-    public abstract void execute(List<Task> taskList, Storage storage, Ui ui);
+    public abstract String execute(List<Task> taskList, Storage storage, Ui ui);
 
     /**
      * Returns whether this command causes the program to terminate.

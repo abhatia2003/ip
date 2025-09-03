@@ -21,7 +21,6 @@ import morpheus.tasks.Task;
  * @author Aayush
  */
 public class Ui {
-    private static final String HORIZONTAL_LINE = "------------------------------------------------------------\n";
     private static final String TODO = "todo";
     private static final String DEADLINE = "deadline";
     private static final String EVENT = "event";
@@ -51,60 +50,11 @@ public class Ui {
     }
 
     /**
-     * Displays the welcome banner and introduction message.
-     * Made up of ASCII art for aesthetic purposes.
-     */
-    public void welcomeMessage() {
-        String welcome = """
-     _    _      _
-    | |  | |    | |
-    | |  | | ___| | ___ ___  _ __ ___   ___
-    | |/\\| |/ _ \\ |/ __/ _ \\| '_ ` _ \\ / _ \\
-    \\  /\\  /  __/ | (_| (_) | | | | | |  __/
-     \\/  \\/ \\___|_|\\___\\___/|_| |_| |_|\\___|
-            """;
-
-        String to = """
-     _
-    | |
-    | |_ ___
-    | __/ _ \\
-    | || (_) |
-     \\__\\___/
-            """;
-
-        String morpheus = """
-    ___  ___                 _
-    |  \\/  |                | |
-    | .  . | ___  _ __ _ __ | |__   ___ _   _ ___
-    | |\\/| |/ _ \\| '__| '_ \\| '_ \\ / _ \\ | | / __|
-    | |  | | (_) | |  | |_) | | | |  __/ |_| \\__ \\
-    \\_|  |_/\\___/|_|  | .__/|_| |_|\\___|\\__,_|___/
-                      | |
-                      |_|
-            """;
-
-        String banner = welcome + "\n" + to + "\n" + morpheus;
-
-        String init = HORIZONTAL_LINE
-                + " Hey there! I'm Morpheus, like the one from The Matrix.\n"
-                + " How can I help you today?\n"
-                + HORIZONTAL_LINE;
-
-        System.out.print(banner);
-        System.out.print(init);
-    }
-
-    /**
      * Displays the farewell message and closing banner.
      */
-    public void byeMessage() {
-        System.out.println(
-                HORIZONTAL_LINE
-                        + "Thanks for spending time with me today. "
-                        + "Press Run anytime to start me again. See you soon!\n"
-                        + HORIZONTAL_LINE
-        );
+    public String byeMessage() {
+        return "Thanks for spending time with me today. "
+                        + "Press Run anytime to start me again. See you soon!\n";
     }
 
     /**
@@ -116,22 +66,17 @@ public class Ui {
      *
      * @param tasklist the list of tasks to display
      */
-    public void listMessage(List<Task> tasklist) {
+    public String listMessage(List<Task> tasklist) {
         if (tasklist.size() == 0) {
-            System.out.println(HORIZONTAL_LINE
-                    + "Your list is empty for now. Add one with 'todo', 'deadline', or 'event', "
-                    + "and I'll keep track for you.\n"
-                    + HORIZONTAL_LINE
-            );
-            return;
+            return "Your list is empty for now. Add one with 'todo', 'deadline', or 'event', "
+                    + "and I'll keep track for you.\n";
         }
-        String upperMessage = HORIZONTAL_LINE + "Here's a quick summary of your tasks:";
-        System.out.println(upperMessage);
+        String message = "Here's a quick summary of your tasks:\n";
         for (int i = 0; i < tasklist.size(); i++) {
             String item = String.format("%d. %s", i + 1, tasklist.get(i).toString());
-            System.out.println(item);
+            message += item + "\n";
         }
-        System.out.println(HORIZONTAL_LINE);
+        return message;
     }
 
     /**
@@ -145,26 +90,19 @@ public class Ui {
      *
      * @param filteredTasklist the list of tasks that match the user's search query
      */
-    public void findMessage(List<Task> filteredTasklist) {
+    public String findMessage(List<Task> filteredTasklist) {
         if (filteredTasklist.isEmpty()) {
-            System.out.println(HORIZONTAL_LINE
-                    + "I couldn’t find any tasks matching your search. "
-                    + "You can add one using 'todo', 'deadline', or 'event', and I'll track it for you.\n"
-                    + HORIZONTAL_LINE
-            );
-            return;
+            return "I couldn’t find any tasks matching your search. "
+                    + "You can add one using 'todo', 'deadline', or 'event', and I'll track it for you.";
         }
 
-        String header = HORIZONTAL_LINE
-                + "Here are the tasks I found that match your search:";
-        System.out.println(header);
+        String message = "Here are the tasks I found that match your search:\n";
 
         for (int i = 0; i < filteredTasklist.size(); i++) {
             String item = String.format("%d. %s", i + 1, filteredTasklist.get(i).toString());
-            System.out.println(item);
+            message += item + "\n";
         }
-
-        System.out.println(HORIZONTAL_LINE);
+        return message;
     }
 
     /**
@@ -172,12 +110,9 @@ public class Ui {
      *
      * @param task the task that was marked
      */
-    public void markMessage(String task) {
-        String output = HORIZONTAL_LINE
-                + "Nice! I've marked this as completed:\n"
-                + task + "\n"
-                + HORIZONTAL_LINE;
-        System.out.println(output);
+    public String markMessage(String task) {
+        return "Nice! I've marked this as completed:\n"
+                + task;
     }
 
     /**
@@ -185,12 +120,10 @@ public class Ui {
      *
      * @param task the task that was unmarked
      */
-    public void unmarkMessage(String task) {
-        String output = HORIZONTAL_LINE
-                + "All set. I've marked this task as not done:\n"
-                + task + "\n"
-                + HORIZONTAL_LINE;
-        System.out.println(output);
+    public String unmarkMessage(String task) {
+        return "All set. I've marked this task as not done:\n"
+                + task;
+
     }
 
     /**
@@ -199,15 +132,13 @@ public class Ui {
      *
      * @param taskList the current list of tasks (the most recently added task is shown)
      */
-    public void addTaskMessage(List<Task> taskList) {
+    public String addTaskMessage(List<Task> taskList) {
         String output = String.format("Added this task:\n %s", taskList.get(taskList.size() - 1));
         String taskLength = String.format(
                 "You now have %d task(s) on your list. Nice progress!",
                 taskList.size());
-        String printMessage = HORIZONTAL_LINE
-                + output + "\n" + taskLength + "\n"
-                + HORIZONTAL_LINE;
-        System.out.println(printMessage);
+        return output + "\n" + taskLength;
+
     }
 
     /**
@@ -217,12 +148,10 @@ public class Ui {
      * @param task     the task that was deleted
      * @param taskList the updated list of tasks
      */
-    public void deleteTaskMessage(String task, List<Task> taskList) {
+    public String deleteTaskMessage(String task, List<Task> taskList) {
         String taskLength = String.format("You now have %d task(s) on your list. Great work!", taskList.size());
-        String output = HORIZONTAL_LINE
-                + "Got it! I've removed this task:\n"
-                + task + "\n" + taskLength + "\n"
-                + HORIZONTAL_LINE;
-        System.out.println(output);
+        return "Got it! I've removed this task:\n"
+                + task + "\n" + taskLength + "\n";
+
     }
 }

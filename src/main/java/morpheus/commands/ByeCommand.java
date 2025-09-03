@@ -45,8 +45,8 @@ public class ByeCommand extends Command {
      * @param ui       the user interface handler responsible for displaying messages
      */
     @Override
-    public void execute(List<Task> taskList, Storage storage, Ui ui) {
-        ui.byeMessage();
+    public String execute(List<Task> taskList, Storage storage, Ui ui) {
         storage.save(taskList);
+        return ui.byeMessage();
     }
 }

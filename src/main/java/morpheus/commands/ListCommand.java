@@ -44,7 +44,7 @@ public class ListCommand extends Command {
      * @param ui the user interface handler responsible for displaying the message
      */
     @Override
-    public void execute(List<Task> taskList, Storage storage, Ui ui) {
-        ui.listMessage(taskList);
+    public String execute(List<Task> taskList, Storage storage, Ui ui) {
+        return ui.listMessage(taskList);
     }
 }

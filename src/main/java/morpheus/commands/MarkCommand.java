@@ -49,19 +49,19 @@ public class MarkCommand extends Command {
      * @param ui the user interface handler responsible for displaying messages
      */
     @Override
-    public void execute(List<Task> taskList, Storage storage, Ui ui) {
+    public String execute(List<Task> taskList, Storage storage, Ui ui) {
         try {
             int id = Integer.valueOf(this.input.substring(4).trim()) - 1;
             Task task = taskList.get(id);
             task.mark();
-            ui.markMessage(task.toString());
             storage.save(taskList);
+            return ui.markMessage(task.toString());
         } catch (IndexOutOfBoundsException e) {
-            System.out.println("I couldn't find that task number. Try 'list' to see what's available, "
-                    + "then pick a number from there.");
+            return "I couldn't find that task number. Try 'list' to see what's available, "
+                    + "then pick a number from there.";
         } catch (NumberFormatException e) {
-            System.out.println("It seems I couldn't spot a task number after 'mark'. "
-                    + "You can try something like: mark 2");
+            return "It seems I couldn't spot a task number after 'mark'. "
+                    + "You can try something like: mark 2";
         }
     }
 }

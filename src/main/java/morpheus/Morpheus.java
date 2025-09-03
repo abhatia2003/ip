@@ -22,7 +22,7 @@ import morpheus.utils.Ui;
  *   <li>{@link List}&lt;{@link Task}&gt; for storing the current tasks</li>
  * </ul>
  *
- * The main program flow is handled by the {@link #run()} method, which continually
+ * The main program flow is handled by the {@link #getResponse(String)} method, which continually
  * reads user input, parses it into a {@link Command}, and executes it until the
  * program is instructed to exit.
  *
@@ -45,17 +45,16 @@ public class Morpheus {
     }
 
     /**
-     * The main entry point of the application.
-     * <p>
-     * Creates an instance of {@code Morpheus} with the default storage file
-     * and starts the application loop.
-     * </p>
-     *
-     * @param args command-line arguments (not used)
+     * Displays the welcome banner and introduction message.
+     * Made up of ASCII art for aesthetic purposes.
      */
-    public static void main(String[] args) {
-        new Morpheus("data/morpheus.txt").run();
+    public String getWelcomeMessage() {
+        String init =
+                "Hey there! I'm Morpheus, like the one from The Matrix.\n"
+                + "How can I help you today?\n";
+        return init;
     }
+
 
     /**
      * Runs the main program loop.
@@ -69,25 +68,14 @@ public class Morpheus {
      * </ol>
      * </p>
      */
-    public void run() {
-        boolean isExit = false;
-        String input;
-        this.ui.welcomeMessage();
-        while (!isExit) {
-            input = this.ui.readInput();
-            if (input.isEmpty()) {
-                System.out.println("Looks like that line was empty. Try adding a task with 'todo', "
-                        + "'deadline', or 'event'. I'm ready when you are!");
-                continue;
-            }
-            Command command = Parser.parse(input);
-            if (command != null) {
-                command.execute(this.taskList, this.storage, this.ui);
-                isExit = command.isExit();
-            } else {
-                System.out.println("Seems like you entered an invalid command. Please try again");
-            }
+    public String getResponse(String input) {
+        Command command = Parser.parse(input);
+        if (command == null) {
+            return "Seems like you entered an invalid command. Please try again.";
+        } else if (command.isExit()) {
+            return "END PROGRAM";
+        } else {
+            return command.execute(this.taskList, this.storage, this.ui);
         }
-        ui.closeScanner();
     }
 }
