@@ -1,9 +1,8 @@
 package morpheus.tasks;
 
-import morpheus.utils.CustomDateTime;
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
 
 public class ToDoTaskTest {
     @Test

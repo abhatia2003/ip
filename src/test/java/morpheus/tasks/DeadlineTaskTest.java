@@ -1,9 +1,10 @@
 package morpheus.tasks;
 
-import morpheus.utils.CustomDateTime;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import morpheus.utils.CustomDateTime;
 
 public class DeadlineTaskTest {
 
