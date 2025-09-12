@@ -2,6 +2,7 @@ package morpheus;
 
 import java.util.List;
 
+import morpheus.commands.CheckRemindersCommand;
 import morpheus.commands.Command;
 import morpheus.tasks.Task;
 import morpheus.utils.Parser;
@@ -29,13 +30,14 @@ import morpheus.utils.Ui;
  * @author Aayush
  */
 public class Morpheus {
+    private static final String INVALID_COMMAND_MSG =
+            "Seems like you entered an invalid command. Please try again.";
+    private static final String EXIT_COMMAND = "END PROGRAM";
     private final Ui ui;
     private final Storage storage;
     private final List<Task> taskList;
 
-    private static final String INVALID_COMMAND_MSG =
-            "Seems like you entered an invalid command. Please try again.";
-    private static final String EXIT_COMMAND = "END PROGRAM";
+
 
     /**
      * Constructs a new instance of Morpheus.
@@ -57,8 +59,21 @@ public class Morpheus {
      * Introduces the assistant persona to the user.
      */
     public String getWelcomeMessage() {
-        return "Hey there! I'm Morpheus, like the one from The Matrix.\n"
-                + "How can I help you today?\n";
+        StringBuilder sb = new StringBuilder();
+        sb.append("Hey there! I'm Morpheus, like the one from The Matrix.\n")
+                .append("How can I help you today?\n");
+
+        // Run the reminders check
+        String reminders = new CheckRemindersCommand("reminders")
+                .execute(this.taskList, this.storage, this.ui);
+
+        if (!reminders.isBlank()) {
+            sb.append("\nBefore we dive in, here are a few things I thought you’d like to be reminded about:\n")
+                    .append(reminders)
+                    .append("\nLet’s get started \n");
+        }
+
+        return sb.toString();
     }
 
     /**

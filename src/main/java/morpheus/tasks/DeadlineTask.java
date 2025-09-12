@@ -68,8 +68,12 @@ public class DeadlineTask extends Task {
      */
     @Override
     public String encode() {
-        return "D | " + (this.isDone ? "1" : "0") + " | "
+        String base = "D | " + (this.isDone ? "1" : "0") + " | "
                 + clean(description) + " | " + this.endDateTime.toString();
+        if (reminder != null) {
+            base += " | REMINDER: " + reminder.toString();
+        }
+        return base;
     }
 
     /**
@@ -80,6 +84,10 @@ public class DeadlineTask extends Task {
      */
     @Override
     public String toString() {
-        return String.format("[D] %s (by: %s)", super.toString(), this.endDateTime.toString());
+        String base = String.format("[D] %s (by: %s)", super.toString(), this.endDateTime.toString());
+        if (reminder != null) {
+            base += String.format(" ⏰ %s", reminder.toString());
+        }
+        return base;
     }
 }

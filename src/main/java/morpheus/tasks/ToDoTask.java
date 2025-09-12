@@ -56,7 +56,12 @@ public class ToDoTask extends Task {
      */
     @Override
     public String encode() {
-        return "T | " + (this.isDone ? "1" : "0") + " | " + clean(description);
+
+        String base = "T | " + (this.isDone ? "1" : "0") + " | " + clean(description);
+        if (reminder != null) {
+            base += " | REMINDER: " + reminder.toString();
+        }
+        return base;
     }
 
     /**
@@ -67,6 +72,10 @@ public class ToDoTask extends Task {
      */
     @Override
     public String toString() {
-        return String.format("[T] %s", super.toString());
+        String base = String.format("[T] %s", super.toString());
+        if (reminder != null) {
+            base += String.format(" ⏰ %s", reminder.toString());
+        }
+        return base;
     }
 }

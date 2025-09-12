@@ -35,6 +35,7 @@ public class DeleteCommand extends Command {
         try {
             int id = parseTaskIndex();
             Task task = taskList.remove(id);
+            storage.save(taskList);
             return ui.deleteTaskMessage(task.toString(), taskList);
         } catch (IndexOutOfBoundsException e) {
             return INVALID_INDEX_MSG;

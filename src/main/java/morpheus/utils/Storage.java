@@ -10,10 +10,17 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
-import morpheus.tasks.*;
+import morpheus.tasks.DeadlineTask;
+import morpheus.tasks.EventTask;
+import morpheus.tasks.Task;
+import morpheus.tasks.ToDoTask;
+
 
 /**
  * Handles reading and writing of task data to a persistent file.
@@ -32,6 +39,18 @@ public class Storage {
 
     private final Path file;
 
+    /**
+     * Creates a new {@code Storage} object that manages persistence of tasks
+     * in the specified file path.
+     * <p>
+     * The constructor ensures that the underlying file and its parent directories
+     * exist by calling {@link #checkFile(Path)}. If initialization fails due to
+     * I/O issues, a warning message is printed to the error stream, but the
+     * {@code Storage} object is still created with the provided path.
+     * </p>
+     *
+     * @param filePath the path to the save file where tasks will be stored
+     */
     public Storage(String filePath) {
         Path p = toPath(filePath);
         try {
@@ -111,17 +130,38 @@ public class Storage {
                     .map(String::trim)
                     .toArray(String[]::new);
 
+            // check if last part is a reminder
+            String reminderRaw = null;
+            if (parts[parts.length - 1].startsWith("REMINDER:")) {
+                reminderRaw = parts[parts.length - 1].substring("REMINDER:".length()).trim();
+            }
+
             String type = parts[0];
             boolean isDone = DONE_CODE.equals(parts[1]);
 
+            Task task;
             switch (type) {
-                case TODO_CODE: return Optional.of(decodeToDo(parts, isDone));
-                case DEADLINE_CODE: return Optional.of(decodeDeadline(parts, isDone));
-                case EVENT_CODE: return Optional.of(decodeEvent(parts, isDone));
-                default:
-                    System.err.println("[WARN] Unknown type: " + type + " in line: " + line);
-                    return Optional.empty();
+            case TODO_CODE:
+                task = decodeToDo(parts, isDone);
+                break;
+            case DEADLINE_CODE:
+                task = decodeDeadline(parts, isDone);
+                break;
+            case EVENT_CODE:
+                task = decodeEvent(parts, isDone);
+                break;
+            default:
+                System.err.println("[WARN] Unknown type: " + type + " in line: " + line);
+                return Optional.empty();
             }
+
+            // attach reminder if found
+            if (reminderRaw != null && !reminderRaw.isEmpty()) {
+                task.setReminder(new CustomDateTime(reminderRaw));
+            }
+
+            return Optional.of(task);
+
         } catch (Exception e) {
             System.err.println("[WARN] Corrupted line: " + line);
             return Optional.empty();
@@ -147,7 +187,18 @@ public class Storage {
      * Converts a formatted date-time string from storage into a normalized format.
      */
     public static String decodeTime(String input) {
-        LocalDateTime dateTime = LocalDateTime.parse(input, INPUT_FORMATTER);
-        return dateTime.format(OUTPUT_FORMATTER);
+        try {
+            // Try "12 Sep 2025, 3:00 PM"
+            LocalDateTime dateTime = LocalDateTime.parse(input, INPUT_FORMATTER);
+            return dateTime.format(OUTPUT_FORMATTER);
+        } catch (Exception e) {
+            try {
+                // Already normalized (e.g. 12/9/2025 1500)
+                CustomDateTime cdt = new CustomDateTime(input);
+                return cdt.toLocalDateTime().format(OUTPUT_FORMATTER);
+            } catch (Exception inner) {
+                throw new IllegalArgumentException("Unsupported date format: " + input);
+            }
+        }
     }
 }
