@@ -41,7 +41,9 @@ public class AddCommand extends Command {
      */
     public AddCommand(String input) {
         super(input);
+        assert input != null : "Input should not be null";
         this.type = parseType(input.trim());
+        assert this.type != null : "Parsed type should not be null";
     }
 
     /**
@@ -99,6 +101,7 @@ public class AddCommand extends Command {
                 switch (this.type) {
                 case TODO:
                     String task = this.input.substring(TODO.length()).trim();
+                    assert task != null : "TODO description should not be null";
                     if (task.length() < 2) {
                         throw new IllegalArgumentException("your todo description looks a bit short. "
                                 + "Try: todo <description>");
@@ -107,6 +110,7 @@ public class AddCommand extends Command {
                     break;
                 case DEADLINE:
                     String[] deadlineParts = this.input.substring(DEADLINE.length()).trim().split("(?i)/by");
+                    assert deadlineParts.length >= 2 : "Deadline should include a due date";
                     if (deadlineParts.length < 2) {
                         throw new IllegalArgumentException("I can only add a deadline once I have a due time. "
                                 + "Try: deadline <task> /by <time>");
@@ -117,6 +121,7 @@ public class AddCommand extends Command {
                     break;
                 case EVENT:
                     String[] eventParts = this.input.substring(EVENT.length()).trim().split("(?i)/from|/to");
+                    assert eventParts.length >= 3 : "Event should include a start date and an end date";
                     if (eventParts.length < 3) {
                         throw new IllegalArgumentException("I can only add an event once I have both start and "
                                 + "end times. Try: event <task> /from <start> /to <end>");
@@ -132,6 +137,7 @@ public class AddCommand extends Command {
                     taskList.add(new EventTask(eventContent, eventStartTime, eventEndTime));
                     break;
                 default:
+                    assert this.type.equals(INVALID_TYPE) : "Unexpected type in AddCommand";
                     throw new IllegalArgumentException("I didn't recognise that task type. Please start "
                             + "with 'todo', 'deadline', or 'event' and I'll take it from there.");
                 }
