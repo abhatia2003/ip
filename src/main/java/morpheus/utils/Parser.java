@@ -2,13 +2,14 @@ package morpheus.utils;
 
 import morpheus.commands.AddCommand;
 import morpheus.commands.ByeCommand;
+import morpheus.commands.CheckRemindersCommand;
 import morpheus.commands.Command;
 import morpheus.commands.DeleteCommand;
 import morpheus.commands.FindCommand;
 import morpheus.commands.ListCommand;
 import morpheus.commands.MarkCommand;
+import morpheus.commands.RemindCommand;
 import morpheus.commands.UnmarkCommand;
-
 /**
  * Parses raw user input into corresponding {@link Command} objects.
  * <p>
@@ -54,6 +55,8 @@ public class Parser {
         case "unmark": return new UnmarkCommand(input);
         case "mark": return new MarkCommand(input);
         case "delete": return new DeleteCommand(input);
+        case "remind": return new RemindCommand(input);
+        case "reminders": return new CheckRemindersCommand(input);
         case "event":
         case "todo":
         case "deadline":

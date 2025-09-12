@@ -1,7 +1,6 @@
 package morpheus;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -13,6 +12,10 @@ import javafx.stage.Stage;
  * Controller for the main GUI.
  */
 public class MainWindow extends AnchorPane {
+    private static final String USER_IMAGE_PATH = "/images/neo.png";
+    private static final String MORPHEUS_IMAGE_PATH = "/images/morpheus.png";
+    private static final String EXIT_COMMAND = "END PROGRAM";
+
     @FXML
     private ScrollPane scrollPane;
     @FXML
@@ -22,10 +25,6 @@ public class MainWindow extends AnchorPane {
 
     private Morpheus morpheus;
     private Stage stage;
-
-    private static final String USER_IMAGE_PATH = "/images/neo.png";
-    private static final String MORPHEUS_IMAGE_PATH = "/images/morpheus.png";
-    private static final String EXIT_COMMAND = "END PROGRAM";
 
     private final Image userImage = new Image(this.getClass().getResourceAsStream(USER_IMAGE_PATH));
     private final Image morpheusImage = new Image(this.getClass().getResourceAsStream(MORPHEUS_IMAGE_PATH));

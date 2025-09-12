@@ -38,7 +38,7 @@ public class Ui {
     public String listMessage(List<Task> taskList) {
         return formatTaskList(
                 taskList,
-                "Here's a quick summary of your tasks:",
+                "Here's a quick summary of your tasks:\n",
                 "Your list is empty for now. Add one with 'todo', 'deadline', or 'event', and I'll keep track for you."
         );
     }
@@ -68,6 +68,10 @@ public class Ui {
         String taskInfo = String.format("Added this task:\n %s", taskList.get(taskList.size() - 1));
         String taskCount = String.format("You now have %d task(s) on your list. Nice progress!", taskList.size());
         return taskInfo + "\n" + taskCount;
+    }
+
+    public String reminderMessage(String task) {
+        return String.format("Reminder set for:\n%s\n", task);
     }
 
     /** Displays a message confirming a task has been deleted. */

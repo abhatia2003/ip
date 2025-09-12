@@ -1,2 +1,2 @@
-E | 0 | Go to the Gym | 25 May 2025, 9:00 PM | 25 May 2025, 10:00 PM
-T | 0 | Meet Friends
+E | 0 | Go to the Gym | 25 May 2025, 9:00 PM | 25 May 2025, 10:00 PM | REMINDER: 16 Sep 2025, 9:00 PM
+D | 0 | homework | 12 Sep 2025, 9:00 PM | REMINDER: 12 Sep 2025, 7:00 PM

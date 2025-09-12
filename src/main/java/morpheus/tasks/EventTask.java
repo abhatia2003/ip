@@ -57,9 +57,13 @@ public class EventTask extends Task {
      */
     @Override
     public String encode() {
-        return "E | " + (this.isDone ? "1" : "0") + " | "
+        String base = "E | " + (this.isDone ? "1" : "0") + " | "
                 + clean(description) + " | "
                 + this.startDateTime.toString() + " | " + this.endDateTime.toString();
+        if (reminder != null) {
+            base += " | REMINDER: " + reminder.toString();
+        }
+        return base;
     }
 
     /**
@@ -89,9 +93,13 @@ public class EventTask extends Task {
      */
     @Override
     public String toString() {
-        return String.format("[E] %s (from: %s to: %s)",
+        String base = String.format("[E] %s (from: %s to: %s)",
                 super.toString(),
                 this.startDateTime.toString(),
                 this.endDateTime.toString());
+        if (reminder != null) {
+            base += String.format(" ⏰ %s", reminder.toString());
+        }
+        return base;
     }
 }

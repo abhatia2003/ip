@@ -24,7 +24,8 @@ public class AddCommand extends Command {
     private static final String UNEXPECTED_ERROR_MSG =
             "Sorry, something unexpected happened while adding that task. Could I trouble you to add it in again?";
     private static final String INVALID_TYPE_MSG =
-            "I didn't recognise that task type. Please start with 'todo', 'deadline', or 'event' and I'll take it from there.";
+            "I didn't recognise that task type. "
+                    + "Please start with 'todo', 'deadline', or 'event' and I'll take it from there.";
     private static final String TODO_DESC_ERROR =
             "Your todo description looks a bit short. Try: todo <description>";
     private static final String DEADLINE_FORMAT_ERROR =
@@ -36,6 +37,18 @@ public class AddCommand extends Command {
 
     private final String type;
 
+    /**
+     * Constructs a new {@code AddCommand} using the given raw user input.
+     * <p>
+     * This constructor ensures the input is not {@code null}, parses the task
+     * type (e.g., {@code todo}, {@code deadline}, {@code event}), and stores it
+     * for later use when executing the command.
+     * </p>
+     *
+     * @param input the raw user input string that specifies the task to add;
+     *              must not be {@code null}
+     * @throws AssertionError if {@code input} is {@code null} or the parsed type is {@code null}
+     */
     public AddCommand(String input) {
         super(input);
         assert input != null : "Input should not be null";
@@ -63,18 +76,18 @@ public class AddCommand extends Command {
 
         try {
             switch (this.type) {
-                case TODO:
-                    handleTodoTask(taskList);
-                    break;
-                case DEADLINE:
-                    handleDeadlineTask(taskList);
-                    break;
-                case EVENT:
-                    handleEventTask(taskList);
-                    break;
-                default:
-                    assert this.type.equals(INVALID_TYPE) : "Unexpected type in AddCommand";
-                    throw new IllegalArgumentException(INVALID_TYPE_MSG);
+            case TODO:
+                handleTodoTask(taskList);
+                break;
+            case DEADLINE:
+                handleDeadlineTask(taskList);
+                break;
+            case EVENT:
+                handleEventTask(taskList);
+                break;
+            default:
+                assert this.type.equals(INVALID_TYPE) : "Unexpected type in AddCommand";
+                throw new IllegalArgumentException(INVALID_TYPE_MSG);
             }
             storage.save(taskList);
             return ui.addTaskMessage(taskList);
