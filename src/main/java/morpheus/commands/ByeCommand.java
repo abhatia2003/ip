@@ -21,8 +21,6 @@ import morpheus.utils.Ui;
  * bye
  * </pre>
  * This terminates the program after saving tasks.
- *
- * @author Aayush
  */
 public class ByeCommand extends Command {
 
@@ -33,7 +31,7 @@ public class ByeCommand extends Command {
      */
     public ByeCommand(String input) {
         super(input);
-        this.isExit = true;
+        this.setExit(true);
     }
 
     /**
@@ -46,7 +44,12 @@ public class ByeCommand extends Command {
      */
     @Override
     public String execute(List<Task> taskList, Storage storage, Ui ui) {
-        storage.save(taskList);
+        try {
+            storage.save(taskList);
+        } catch (Exception e) {
+            System.err.println("Failed to save tasks before exiting.");
+            e.printStackTrace();
+        }
         return ui.byeMessage();
     }
 }

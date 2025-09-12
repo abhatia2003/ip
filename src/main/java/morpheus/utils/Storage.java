@@ -10,48 +10,30 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.Locale;
-import java.util.Optional;
 
-import morpheus.tasks.DeadlineTask;
-import morpheus.tasks.EventTask;
-import morpheus.tasks.Task;
-import morpheus.tasks.ToDoTask;
+import morpheus.tasks.*;
 
 /**
  * Handles reading and writing of task data to a persistent file.
- * <p>
- * The {@code Storage} class ensures that tasks are saved and restored between
- * sessions of the Morpheus task manager. It manages the creation of the save
- * file and its parent directories if they do not exist.
- * </p>
- *
- * Tasks are serialized using the {@link Task#encode()} format and deserialized
- * via the internal {@link #decodeTask(String)} method.
- *
- * Example file line formats:
- * <ul>
- *   <li>ToDo: <code>T | 0 | Read book</code></li>
- *   <li>Deadline: <code>D | 1 | Submit report | 28/8/2025 1800</code></li>
- *   <li>Event: <code>E | 0 | Project meeting | 24/4/2025 1300 | 24/4/2025 1500</code></li>
- * </ul>
- *
- * @author Aayush
  */
 public class Storage {
+
+    private static final String TODO_CODE = "T";
+    private static final String DEADLINE_CODE = "D";
+    private static final String EVENT_CODE = "E";
+    private static final String DONE_CODE = "1";
+
+    private static final DateTimeFormatter INPUT_FORMATTER =
+            DateTimeFormatter.ofPattern("d MMM yyyy, h:mm a", Locale.ENGLISH);
+    private static final DateTimeFormatter OUTPUT_FORMATTER =
+            DateTimeFormatter.ofPattern("d/M/yyyy HHmm");
+
     private final Path file;
 
-    /**
-     * Constructs a new {@code Storage} instance with the given file path.
-     * Ensures the file and its parent directories exist.
-     *
-     * @param filePath the path to the save file
-     */
     public Storage(String filePath) {
-        Path p = Storage.toPath(filePath);
+        Path p = toPath(filePath);
         try {
             checkFile(p);
         } catch (IOException e) {
@@ -60,12 +42,6 @@ public class Storage {
         this.file = p;
     }
 
-    /**
-     * Converts a string file path into a {@link Path} object.
-     *
-     * @param filePath the string path
-     * @return the corresponding Path object
-     */
     private static Path toPath(String filePath) {
         String[] parts = filePath.split("/");
         return Paths.get(parts[0], Arrays.copyOfRange(parts, 1, parts.length));
@@ -73,9 +49,6 @@ public class Storage {
 
     /**
      * Loads tasks from the save file into memory.
-     *
-     * @return a list of tasks decoded from the save file; returns an empty list if
-     *         the file is unreadable or corrupted
      */
     public List<Task> load() {
         List<Task> taskList = new ArrayList<>();
@@ -97,8 +70,6 @@ public class Storage {
 
     /**
      * Saves the given list of tasks to the save file.
-     *
-     * @param tasks the tasks to persist
      */
     public void save(List<Task> tasks) {
         try {
@@ -119,10 +90,8 @@ public class Storage {
     }
 
     /**
-     * Ensures that the given file and its parent directories exist.
-     *
-     * @param file the path to check
-     * @throws IOException if the file or directories cannot be created
+     * Ensures that the given file and its parent directories exist
+     * so that tasks can always be persisted between sessions.
      */
     private void checkFile(Path file) throws IOException {
         if (Files.notExists(file.getParent())) {
@@ -135,57 +104,50 @@ public class Storage {
 
     /**
      * Decodes a line of text from the save file into a {@link Task}.
-     *
-     * @param line the encoded line
-     * @return an {@link Optional} containing the decoded task, or empty if decoding fails
      */
     private static Optional<Task> decodeTask(String line) {
         try {
             String[] parts = Arrays.stream(line.split("\\|"))
-                    .map(String::trim).toArray(String[]::new);
+                    .map(String::trim)
+                    .toArray(String[]::new);
+
             String type = parts[0];
-            boolean completionStatus = "1".equals(parts[1]);
+            boolean isDone = DONE_CODE.equals(parts[1]);
 
             switch (type) {
-            case "T":
-                return Optional.of(new ToDoTask(parts[2], completionStatus));
-            case "D":
-                String deadlineEndTime = decodeTime(parts[3]);
-                return Optional.of(new DeadlineTask(parts[2],
-                        completionStatus,
-                        new CustomDateTime(deadlineEndTime)));
-            case "E":
-                String eventStartTime = decodeTime(parts[3]);
-                String eventEndTime = decodeTime(parts[4]);
-                return Optional.of(new EventTask(parts[2],
-                        completionStatus,
-                        new CustomDateTime(eventStartTime),
-                        new CustomDateTime(eventEndTime)));
-            default:
-                System.err.println("[SKIP] Unknown type: " + type + " in line: " + line);
-                return Optional.empty();
+                case TODO_CODE: return Optional.of(decodeToDo(parts, isDone));
+                case DEADLINE_CODE: return Optional.of(decodeDeadline(parts, isDone));
+                case EVENT_CODE: return Optional.of(decodeEvent(parts, isDone));
+                default:
+                    System.err.println("[WARN] Unknown type: " + type + " in line: " + line);
+                    return Optional.empty();
             }
         } catch (Exception e) {
-            System.err.println("[SKIP] Corrupted line: " + line);
+            System.err.println("[WARN] Corrupted line: " + line);
             return Optional.empty();
         }
     }
 
+    private static Task decodeToDo(String[] parts, boolean isDone) {
+        return new ToDoTask(parts[2], isDone);
+    }
+
+    private static Task decodeDeadline(String[] parts, boolean isDone) {
+        String end = decodeTime(parts[3]);
+        return new DeadlineTask(parts[2], isDone, new CustomDateTime(end));
+    }
+
+    private static Task decodeEvent(String[] parts, boolean isDone) {
+        String start = decodeTime(parts[3]);
+        String end = decodeTime(parts[4]);
+        return new EventTask(parts[2], isDone, new CustomDateTime(start), new CustomDateTime(end));
+    }
+
     /**
      * Converts a formatted date-time string from storage into a normalized format.
-     * <p>
-     * Input format: {@code d MMM yyyy, h:mm a} (e.g., {@code 28 Aug 2025, 6:00 PM})
-     * </p>
-     * Output format: {@code d/M/yyyy HHmm} (e.g., {@code 28/8/2025 1800})
-     *
-     * @param input the date-time string
-     * @return the reformatted string suitable for {@link CustomDateTime}
      */
     public static String decodeTime(String input) {
-        DateTimeFormatter inputFormatter = DateTimeFormatter
-                .ofPattern("d MMM yyyy, h:mm a", Locale.ENGLISH);
-        LocalDateTime dateTime = LocalDateTime.parse(input, inputFormatter);
-        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("d/M/yyyy HHmm");
-        return dateTime.format(outputFormatter);
+        LocalDateTime dateTime = LocalDateTime.parse(input, INPUT_FORMATTER);
+        return dateTime.format(OUTPUT_FORMATTER);
     }
 }

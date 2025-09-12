@@ -33,6 +33,10 @@ public class Morpheus {
     private final Storage storage;
     private final List<Task> taskList;
 
+    private static final String INVALID_COMMAND_MSG =
+            "Seems like you entered an invalid command. Please try again.";
+    private static final String EXIT_COMMAND = "END PROGRAM";
+
     /**
      * Constructs a new instance of Morpheus.
      *
@@ -41,41 +45,39 @@ public class Morpheus {
     public Morpheus(String filePath) {
         this.ui = new Ui();
         this.storage = new Storage(filePath);
-        this.taskList = storage.load();
+        this.taskList = initializeTaskList();
+    }
+
+    private List<Task> initializeTaskList() {
+        return storage.load();
     }
 
     /**
-     * Displays the welcome banner and introduction message.
-     * Made up of ASCII art for aesthetic purposes.
+     * Returns the welcome message shown when the program starts.
+     * Introduces the assistant persona to the user.
      */
     public String getWelcomeMessage() {
-        String init =
-                "Hey there! I'm Morpheus, like the one from The Matrix.\n"
+        return "Hey there! I'm Morpheus, like the one from The Matrix.\n"
                 + "How can I help you today?\n";
-        return init;
     }
 
-
     /**
-     * Runs the main program loop.
-     * <p>
-     * The loop continues until an exit command is issued. On each iteration:
-     * <ol>
-     *   <li>Prompts the user for input via {@link Ui}</li>
-     *   <li>Parses the input into a {@link Command} using {@link Parser}</li>
-     *   <li>Executes the command, modifying the task list and storage as needed</li>
-     *   <li>Exits the loop if the command signals termination</li>
-     * </ol>
-     * </p>
+     * Processes a single user input and returns the response.
+     *
+     * @param input the raw user input string
+     * @return the response message, or EXIT_COMMAND if program should terminate
      */
     public String getResponse(String input) {
         Command command = Parser.parse(input);
+
         if (command == null) {
-            return "Seems like you entered an invalid command. Please try again.";
-        } else if (command.isExit()) {
-            return "END PROGRAM";
-        } else {
-            return command.execute(this.taskList, this.storage, this.ui);
+            return INVALID_COMMAND_MSG;
         }
+
+        if (command.isExit()) {
+            return EXIT_COMMAND;
+        }
+
+        return command.execute(this.taskList, this.storage, this.ui);
     }
 }

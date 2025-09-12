@@ -9,58 +9,36 @@ import morpheus.utils.Ui;
 /**
  * Represents a command that searches for tasks containing a given keyword
  * in their description.
- * <p>
- * This command is triggered when the user enters the keyword:
- * <code>find {searchTerm}</code>.
- * </p>
- *
- * Upon execution, all tasks whose descriptions contain the search term
- * (case-insensitive) are displayed to the user. A deep copy of the task list
- * is used to ensure the original data remains unaffected.
- *
- * Example usage:
- * <pre>
- * find book
- * </pre>
- * This will list all tasks with descriptions containing "book".
- *
- * @author Aayush
  */
 public class FindCommand extends Command {
 
-    /**
-     * Creates a new FindCommand.
-     *
-     * @param input the raw user input that triggered this command
-     */
+    private static final String COMMAND_WORD = "find";
+    private static final String EMPTY_KEYWORD_MSG =
+            "It seems like you did not finish your find request. Could you please try again?";
+
     public FindCommand(String input) {
         super(input);
     }
 
-    /**
-     * Executes the find command by filtering tasks whose descriptions
-     * contain the target keyword (case-insensitive).
-     * <p>
-     * The {@link Ui} displays the filtered results to the user.
-     * </p>
-     *
-     * @param taskList the list of tasks
-     * @param storage  the storage handler (unused here, but part of the interface)
-     * @param ui       the user interface handler responsible for displaying results
-     */
     @Override
     public String execute(List<Task> taskList, Storage storage, Ui ui) {
-        String target = this.input.substring("find".length()).trim();
+        String target = parseTargetKeyword();
         if (target.isEmpty()) {
-            return "It seems like you did not finish your find request. Could you please try again?";
-
+            return EMPTY_KEYWORD_MSG;
         }
-        List<Task> deepCopy = taskList.stream()
+
+        List<Task> filteredTasks = filterTasks(taskList, target);
+        return ui.findMessage(filteredTasks);
+    }
+
+    private String parseTargetKeyword() {
+        return this.input.substring(COMMAND_WORD.length()).trim();
+    }
+
+    private List<Task> filterTasks(List<Task> taskList, String target) {
+        return taskList.stream()
                 .map(Task::copy)
-                .toList();
-        List<Task> filteredDeepCopy = deepCopy.stream()
                 .filter(task -> task.getDescription().toLowerCase().contains(target.toLowerCase()))
                 .toList();
-        return ui.findMessage(filteredDeepCopy);
     }
 }
