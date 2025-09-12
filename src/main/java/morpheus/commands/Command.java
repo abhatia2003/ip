@@ -16,24 +16,23 @@ import morpheus.utils.Ui;
  * A command encapsulates:
  * <ul>
  *   <li>The raw user input string that triggered it</li>
- *   <li>An {@code isExit} flag to indicate if the program should terminate after execution</li>
+ *   <li>An exit flag to indicate if the program should terminate after execution</li>
  * </ul>
  *
  * Subclasses must implement the {@link #execute(List, Storage, Ui)} method
  * to define their behavior.
- *
- * @author Aayush
  */
 public abstract class Command {
     /**
      * The raw input string entered by the user that created this command.
      */
-    protected String input;
+    protected final String input;
+
     /**
-     * A flag indicating whether this command causes the program to exit.
-     * Defaults to {@code false}.
+     * Indicates whether this command signals program termination.
+     * Defaults to {@code false}, set to true only by exit-related commands.
      */
-    protected boolean isExit = false;
+    private boolean isExit = false;
 
     /**
      * Constructs a new {@code Command}.
@@ -52,6 +51,13 @@ public abstract class Command {
      * @param ui       the user interface handler for displaying output
      */
     public abstract String execute(List<Task> taskList, Storage storage, Ui ui);
+
+    /**
+     * Marks this command as an exit command.
+     */
+    protected void setExit(boolean shouldExit) {
+        this.isExit = shouldExit;
+    }
 
     /**
      * Returns whether this command causes the program to terminate.

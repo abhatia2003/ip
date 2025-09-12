@@ -9,11 +9,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 /**
- * A GUI for Duke using FXML.
+ * A GUI entry point for Morpheus using FXML.
  */
 public class Main extends Application {
 
-    private Morpheus morpheus = new Morpheus("data/morpheus.txt");
+    private static final String STORAGE_FILE_PATH = "data/morpheus.txt";
+    private final Morpheus morpheus = new Morpheus(STORAGE_FILE_PATH);
 
     @Override
     public void start(Stage stage) {
@@ -23,14 +24,16 @@ public class Main extends Application {
             Scene scene = new Scene(ap);
             stage.setScene(scene);
 
-            // Inject Morpheus instance AND Stage into the controller
+            // Provide controller with required dependencies (Morpheus logic and Stage)
             MainWindow controller = fxmlLoader.getController();
             controller.setMorpheus(morpheus);
             controller.setStage(stage);
 
             stage.show();
         } catch (IOException e) {
+            // Log error and exit gracefully to avoid silent UI failure
             e.printStackTrace();
+            System.err.println("Failed to load MainWindow.fxml");
         }
     }
 }

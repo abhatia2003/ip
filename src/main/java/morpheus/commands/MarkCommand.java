@@ -8,24 +8,14 @@ import morpheus.utils.Ui;
 
 /**
  * Represents a command that marks a task as completed.
- * <p>
- * This command is triggered when the user enters the keyword:
- * <code>mark &lt;taskNumber&gt;</code>.
- * </p>
- *
- * Upon execution, the specified task is updated to a completed state,
- * the change is displayed to the user, and the task list is saved
- * back to storage.
- *
- * Example usage:
- * <pre>
- * mark 2
- * </pre>
- * This marks the second task in the list as completed.
- *
- * @author Aayush
  */
 public class MarkCommand extends Command {
+
+    private static final String COMMAND_WORD = "mark";
+    private static final String INVALID_INDEX_MSG =
+            "I couldn't find that task number. Try 'list' to see what's available, then pick a number from there.";
+    private static final String MISSING_NUMBER_MSG =
+            "It seems I couldn't spot a task number after 'mark'. You can try something like: mark 2";
 
     /**
      * Creates a new MarkCommand.
@@ -39,29 +29,24 @@ public class MarkCommand extends Command {
     /**
      * Executes the mark command by updating the completion status of
      * the specified task in the task list to "done".
-     * <p>
-     * The {@link Ui} is used to display a confirmation message, and
-     * the {@link Storage} is updated with the modified task list.
-     * </p>
-     *
-     * @param taskList the list of tasks
-     * @param storage the storage handler responsible for saving changes
-     * @param ui the user interface handler responsible for displaying messages
      */
     @Override
     public String execute(List<Task> taskList, Storage storage, Ui ui) {
         try {
-            int id = Integer.valueOf(this.input.substring(4).trim()) - 1;
+            int id = parseTaskIndex();
             Task task = taskList.get(id);
             task.mark();
             storage.save(taskList);
             return ui.markMessage(task.toString());
         } catch (IndexOutOfBoundsException e) {
-            return "I couldn't find that task number. Try 'list' to see what's available, "
-                    + "then pick a number from there.";
+            return INVALID_INDEX_MSG;
         } catch (NumberFormatException e) {
-            return "It seems I couldn't spot a task number after 'mark'. "
-                    + "You can try something like: mark 2";
+            return MISSING_NUMBER_MSG;
         }
+    }
+
+    private int parseTaskIndex() {
+        String numberPart = input.substring(COMMAND_WORD.length()).trim();
+        return Integer.parseInt(numberPart) - 1; // zero-based index
     }
 }

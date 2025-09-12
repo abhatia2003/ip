@@ -21,10 +21,10 @@ import morpheus.utils.Ui;
  *   <li>Start time (if applicable)</li>
  *   <li>End time (if applicable)</li>
  * </ul>
- *
- * @author Aayush
  */
 public class ListCommand extends Command {
+
+    public static final String COMMAND_WORD = "list";
 
     /**
      * Creates a new ListCommand.
@@ -36,12 +36,13 @@ public class ListCommand extends Command {
     }
 
     /**
-     * Executes the list command, instructing the {@link Ui} to display
-     * all tasks currently in the provided task list.
+     * Executes the list command.
+     * Delegates to the {@link Ui} to generate a formatted view of all tasks.
+     * Useful for users to see the current state of their task list.
      *
      * @param taskList the list of tasks to display
-     * @param storage the storage handler (unused in this command but part of the interface)
-     * @param ui the user interface handler responsible for displaying the message
+     * @param storage  the storage handler (unused in this command but part of the interface)
+     * @param ui       the user interface handler responsible for displaying the message
      */
     @Override
     public String execute(List<Task> taskList, Storage storage, Ui ui) {
