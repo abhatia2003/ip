@@ -1,6 +1,8 @@
 package morpheus.tasks;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -30,5 +32,19 @@ public class DeadlineTaskTest {
     public void toStringTest2() {
         Task deadline = new DeadlineTask("Hand in Homework", new CustomDateTime("20/9/2025 11:00 am"));
         assertEquals("[D] [ ] Hand in Homework (by: 20 Sep 2025, 11:00 AM)", deadline.toString());
+    }
+
+    @Test
+    public void emptyDescriptionTest() {
+        Task deadline = new DeadlineTask("", new CustomDateTime("20/9/2025 11:00 am"));
+        assertEquals("[D] [ ]  (by: 20 Sep 2025, 11:00 AM)", deadline.toString());
+    }
+
+    @Test
+    public void invalidDateFormatTest() {
+        Exception exception = assertThrows(Exception.class, () -> {
+            new DeadlineTask("Test", new CustomDateTime("invalid-date"));
+        });
+        assertTrue(exception.getMessage().toLowerCase().contains("invalid"));
     }
 }
