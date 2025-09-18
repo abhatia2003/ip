@@ -1,0 +1,79 @@
+/* style.css - Aesthetic styling for chatbot GUI */
+.root {
+    -fx-background-color: linear-gradient(to bottom right, #232526, #414345);
+    -fx-font-family: 'Montserrat', 'Segoe UI', 'Arial', sans-serif;
+}
+
+.label, .text {
+    -fx-text-fill: #f8f8f2;
+    -fx-font-size: 15px;
+    -fx-font-family: 'Montserrat', 'Segoe UI', 'Arial', sans-serif;
+    -fx-font-weight: 500;
+    -fx-effect: dropshadow(gaussian, #222, 2, 0.2, 0, 1);
+    -fx-letter-spacing: 0.5px;
+}
+
+.button {
+    -fx-background-color: #5C258D, #4389A2;
+    -fx-background-radius: 20;
+    -fx-text-fill: white;
+    -fx-font-family: 'Montserrat', 'Segoe UI', 'Arial', sans-serif;
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+    -fx-effect: dropshadow(gaussian, #222, 4, 0.3, 0, 2);
+}
+
+.dialog-box {
+    -fx-background-color: #282a36;
+    -fx-background-radius: 15;
+    -fx-padding: 10;
+    -fx-effect: dropshadow(gaussian, #444, 6, 0.2, 0, 2);
+}
+
+.image-view {
+    -fx-effect: dropshadow(gaussian, #222, 8, 0.4, 0, 2);
+    -fx-background-radius: 50%;
+    -fx-border-radius: 50%;
+    -fx-border-width: 3px;
+    -fx-border-color: #ffffff88;
+    -fx-padding: 2px;
+    /* Ensures the image is clipped to a circle */
+    -fx-clip-shape: "circle";
+}
+
+.text-field {
+    -fx-background-color: #44475a;
+    -fx-text-fill: #f8f8f2;
+    -fx-background-radius: 10;
+    -fx-prompt-text-fill: #888;
+    -fx-font-family: 'Montserrat', 'Segoe UI', 'Arial', sans-serif;
+    -fx-font-size: 15px;
+}
+
+.user-box {
+    -fx-background-color: #2d2e3a;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-color: #44475a;
+    -fx-border-width: 1.5;
+    -fx-padding: 12 20 12 20;
+    -fx-effect: dropshadow(gaussian, #23243a, 3, 0.10, 0, 1);
+    -fx-text-fill: #f8f8f2;
+    -fx-font-size: 15px;
+    -fx-font-family: 'Montserrat', 'Segoe UI', 'Arial', sans-serif;
+    -fx-font-weight: 500;
+    -fx-letter-spacing: 0.3px;
+}
+
+.morpheus-box {
+    -fx-background-color: transparent;
+    -fx-background-radius: 15;
+    -fx-border-radius: 15;
+    -fx-border-width: 0;
+    -fx-padding: 12 20 12 20;
+    -fx-text-fill: #f8f8f2;
+    -fx-font-size: 15px;
+    -fx-font-family: 'Montserrat', 'Segoe UI', 'Arial', sans-serif;
+    -fx-font-weight: 500;
+    -fx-letter-spacing: 0.5px;
+}
