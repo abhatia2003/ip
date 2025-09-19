@@ -51,6 +51,7 @@ public class MainWindow extends AnchorPane {
      */
     public void setStage(Stage s) {
         stage = s;
+        stage.setTitle("Morpheus ChatBot");
     }
 
     /**
